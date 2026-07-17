@@ -16,12 +16,21 @@ async function startServer() {
   app.use(express.json());
 
   // GEMINI AI SETUP
-  const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+  let geminiKey = process.env.GEMINI_API_KEY;
+if (geminiKey) geminiKey = geminiKey.replace(/^["']|["']$/g, "").trim();
+const ai = new GoogleGenAI({ apiKey: geminiKey });
 
   // HENRIK DEV API ENGINE (Unofficial but powerful)
   app.get("/api/player/:name/:tag", async (req, res) => {
     const { name, tag } = req.params;
-    const apiKey = process.env.HENRIK_API_KEY;
+    let apiKey = process.env.HENRIK_API_KEY;
+  if (apiKey) apiKey = apiKey.replace(/^["']|["']$/g, "").trim();
+
+    if (!apiKey || apiKey === "" || apiKey === "undefined") {
+      return res.status(400).json({ 
+         error: "A Chave da API (HENRIK_API_KEY) ainda não foi carregada. Você precisa fazer um REDEPLOY no painel do Vercel." 
+       });
+    }
 
     try {
       // 1. Get Account Data (to get PUUID and region)
@@ -113,7 +122,9 @@ async function startServer() {
       
       let message = "Erro ao conectar com a API do Henrik.";
       
-      if (errorData?.errors && Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+      if (status === 401 || status === 403) {
+      message = "Chave da API do Henrik inválida (Unauthorized). Verifique no Vercel se a secret HENRIK_API_KEY está correta e faça um novo Deploy.";
+    } else if (errorData?.errors && Array.isArray(errorData.errors) && errorData.errors.length > 0) {
         message = errorData.errors.map((e: any) => e.message || JSON.stringify(e)).join(" | ");
       } else if (errorData?.message) {
         message = errorData.message;

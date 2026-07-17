@@ -45,7 +45,7 @@ export default function PerformanceRadar({ analysis }: Props) {
       className="pt-16 pb-10 flex flex-col items-center justify-center h-full w-full min-h-[450px]"
     >
       <div className="w-full h-[380px] relative drop-shadow-[0_0_25px_rgba(255,70,85,0.15)]">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" minWidth={100} minHeight={100}>
           <RadarChart cx="50%" cy="50%" outerRadius="75%" data={data}>
             <PolarGrid stroke="#ff465540" strokeWidth={1} />
             <PolarAngleAxis 

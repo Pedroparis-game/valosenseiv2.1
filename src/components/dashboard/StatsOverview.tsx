@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { getOfficialRankIcon } from "../../utils/rankUtils";
 import { motion } from "motion/react";
 import { PlayerStats } from "../../types";
 import { Trophy, Target, TrendingUp } from "lucide-react";
@@ -8,11 +9,24 @@ interface Props {
 }
 
 export default function StatsOverview({ stats }: Props) {
+  const [rankIconUrl, setRankIconUrl] = useState<string>(
+    stats.rankImageUrl || "https://media.valorant-api.com/competitivetiers/03621f13-4c37-ad53-9043-695333d57551/0/largeicon.png"
+  );
+
+  useEffect(() => {
+    if (stats.rankImageUrl) {
+      setRankIconUrl(stats.rankImageUrl);
+      return;
+    }
+    const loadIcon = async () => {
+      const url = await getOfficialRankIcon(stats.rank);
+      setRankIconUrl(url);
+    };
+    loadIcon();
+  }, [stats.rank, stats.rankImageUrl]);
+
   const getRankIcon = (rank: string) => {
-    if (stats.rankImageUrl) return stats.rankImageUrl;
-    if (!rank || rank === "Sem Rank") return "https://media.valorant-api.com/competitivetiers/03621f13-4c37-ad53-9043-695333d57551/0/largeicon.png";
-    const formattedRank = rank.trim().replace(/\s+/g, '_');
-    return `/ranks/${formattedRank}_Rank.png`;
+    return rankIconUrl;
   };
 
   return (

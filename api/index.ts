@@ -51,21 +51,51 @@ app.get("/api/player/:name/:tag", async (req, res) => {
         kdRatio: stats.deaths > 0 ? stats.kills / stats.deaths : stats.kills,
         hsPercentage: Math.round((stats.headshots / (stats.headshots + stats.bodyshots + stats.legshots)) * 100),
         adr: Math.round(stats.damage / match.metadata.rounds_played),
-        timestamp: new Date(match.metadata.game_start * 1000).toISOString()
+        timestamp: new Date(match.metadata.game_start * 1000).toISOString(),
+        kills: stats.kills,
+        deaths: stats.deaths
       };
     });
 
-    const avgHs = recentMatches.reduce((acc: number, m: any) => acc + m.hsPercentage, 0) / recentMatches.length;
+    // Calculate overall stats from these matches
+    const avgHs = recentMatches.length > 0 ? recentMatches.reduce((acc: number, m: any) => acc + m.hsPercentage, 0) / recentMatches.length : 0;
+    const totalKills = recentMatches.reduce((acc: number, m: any) => acc + m.kills, 0);
+    const totalDeaths = recentMatches.reduce((acc: number, m: any) => acc + m.deaths, 0);
+    const overallKd = totalDeaths > 0 ? totalKills / totalDeaths : totalKills;
+
+    let mmrData = null;
+    try {
+      const mmrRes = await axios.get(
+        `https://api.henrikdev.xyz/valorant/v1/mmr/${region}/${encodeURIComponent(name)}/${encodeURIComponent(tag)}`,
+        { headers: { "Authorization": apiKey } }
+      );
+      mmrData = mmrRes.data.data;
+    } catch (e) {
+       console.warn("Could not fetch MMR data");
+    }
+
+    let rankImageUrl = "";
+    try {
+      const valApiRes = await axios.get("https://valorant-api.com/v1/competitivetiers");
+      const tiers = valApiRes.data.data[valApiRes.data.data.length - 1].tiers;
+      const currentRank = mmrData?.currenttierpatched || matches[0]?.players.all_players.find((p: any) => p.puuid === puuid)?.currenttier_patched;
+      const tierData = tiers.find((t: any) => t.tierName.toLowerCase() === currentRank?.toLowerCase());
+      if (tierData && tierData.largeIcon) {
+        rankImageUrl = tierData.largeIcon;
+      }
+    } catch (e) {
+      console.warn("Could not fetch tier image");
+    }
 
     res.json({
       name: formalName || name,
       tag: formalTag || tag,
-      rank: matches[0]?.players?.all_players?.find((p: any) => p.puuid === puuid)?.currenttier_patched || "Sem Rank",
+      rank: mmrData?.currenttierpatched || matches[0]?.players.all_players.find((p: any) => p.puuid === puuid)?.currenttier_patched || "Sem Rank",
       overallHs: parseFloat(avgHs.toFixed(1)) || 0,
       overallWinRate: recentMatches.length > 0 ? Math.round((recentMatches.filter((m: any) => m.outcome === "Victory").length / recentMatches.length) * 100) : 0,
-      overallKd: parseFloat((recentMatches.reduce((acc: number, m: any) => acc + (m.kdRatio || 0), 0) / (recentMatches.length || 1)).toFixed(2)) || 0,
-      rr: 0,
-      rankImageUrl: "",
+      overallKd: parseFloat(overallKd.toFixed(2)) || 0,
+      rr: mmrData?.ranking_in_tier || 0,
+      rankImageUrl: rankImageUrl || "https://media.valorant-api.com/competitivetiers/03621f13-4c37-ad53-9043-695333d57551/0/largeicon.png",
       recentMatches
     });
   } catch (error: any) {

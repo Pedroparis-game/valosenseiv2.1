@@ -23,6 +23,7 @@ import { X } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 
 import { Flame } from "lucide-react";
+import { getOfficialRankIcon } from "../../utils/rankUtils";
 export default function Insights({ analysis, stats }: InsightsProps) {
   const MINDSET_QUOTES = [
     "A diferença entre o bom e o melhor é a consistência.",
@@ -38,6 +39,21 @@ export default function Insights({ analysis, stats }: InsightsProps) {
   const quote = MINDSET_QUOTES[quoteIndex];
 
   const [selectedInsight, setSelectedInsight] = React.useState<any>(null);
+  const [rankIconUrl, setRankIconUrl] = React.useState<string>(
+    stats.rankImageUrl || "https://media.valorant-api.com/competitivetiers/03621f13-4c37-ad53-9043-695333d57551/0/largeicon.png"
+  );
+
+  React.useEffect(() => {
+    if (stats.rankImageUrl) {
+      setRankIconUrl(stats.rankImageUrl);
+      return;
+    }
+    const loadIcon = async () => {
+      const url = await getOfficialRankIcon(stats.rank);
+      setRankIconUrl(url);
+    };
+    loadIcon();
+  }, [stats.rank, stats.rankImageUrl]);
   const prioritizedInsights = useMemo(() => {
     return [...(analysis?.insights || [])].sort((a, b) => {
       const priorityOrder = { high: 0, medium: 1, low: 2 };
@@ -157,8 +173,8 @@ export default function Insights({ analysis, stats }: InsightsProps) {
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-brand-gray/30 p-1 bg-brand-dark relative group-hover:border-brand-red/50 transition-colors">
                   <div className="absolute inset-0 bg-brand-red/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  {stats.rankImageUrl ? (
-                    <img src={stats.rankImageUrl} alt="Rank" className="w-full h-full object-contain" />
+                  {rankIconUrl ? (
+                    <img src={rankIconUrl} alt="Rank" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
                   ) : (
                     <User className="w-full h-full p-2 text-brand-gray" />
                   )}

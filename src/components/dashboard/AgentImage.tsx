@@ -45,6 +45,6 @@ export default function AgentImage({ agentName }: Props) {
   }
 
   return (
-    <img src={iconUrl} alt={agentName} className="w-10 h-10 rounded-full border border-brand-red shrink-0 object-cover bg-brand-dark/50" />
+    <img src={iconUrl} referrerPolicy="no-referrer" alt={agentName} className="w-10 h-10 rounded-full border border-brand-red shrink-0 object-cover bg-brand-dark/50" />
   );
 }

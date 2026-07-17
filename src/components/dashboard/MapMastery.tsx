@@ -39,7 +39,7 @@ const MapBackground = ({ mapName }: { mapName: string }) => {
   }, [mapName]);
 
   if (!bgUrl) return null;
-  return <div className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-luminosity filter blur-[1px] transition-all group-hover:scale-110 group-hover:opacity-50" style={{ backgroundImage: `url(${bgUrl})` }} />;
+  return <img src={bgUrl} referrerPolicy="no-referrer" alt={mapName} className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-luminosity filter blur-[1px] transition-all group-hover:scale-110 group-hover:opacity-50 pointer-events-none" />;
 };
 
 export default function MapMastery({ maps }: Props) {

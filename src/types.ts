@@ -31,7 +31,7 @@ export interface PlayerStats {
 }
 
 export interface TrainingInsight {
-  category: 'mira' | 'posicionamento' | 'economia' | 'utilitarias';
+  category: 'mira' | 'posicionamento' | 'economia' | 'utilitarias' | 'gameSense';
   title: string;
   description: string;
   priority: 'low' | 'medium' | 'high';

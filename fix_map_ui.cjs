@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+const fs = require('fs');
+
+const content = `import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { MapPerformance } from "../../types";
 import AgentImage from "./AgentImage";
@@ -195,3 +197,6 @@ export default function MapMastery({ maps }: Props) {
     </div>
   );
 }
+`;
+
+fs.writeFileSync('src/components/dashboard/MapMastery.tsx', content);

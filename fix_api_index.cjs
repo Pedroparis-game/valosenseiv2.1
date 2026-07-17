@@ -1,4 +1,5 @@
-import express from "express";
+const fs = require('fs');
+const content = `import express from "express";
 import cors from "cors";
 import axios from "axios";
 import dotenv from "dotenv";
@@ -26,13 +27,13 @@ app.get("/api/player/:name/:tag", async (req, res) => {
 
   try {
     const accountRes = await axios.get(
-      `https://api.henrikdev.xyz/valorant/v1/account/${encodeURIComponent(name)}/${encodeURIComponent(tag)}`,
+      \`https://api.henrikdev.xyz/valorant/v1/account/\${encodeURIComponent(name)}/\${encodeURIComponent(tag)}\`,
       { headers: { "Authorization": apiKey } }
     );
     const { puuid, name: formalName, tag: formalTag, region } = accountRes.data.data;
 
     const matchRes = await axios.get(
-      `https://api.henrikdev.xyz/valorant/v3/matches/${region}/${encodeURIComponent(name)}/${encodeURIComponent(tag)}?filter=competitive&size=3`,
+      \`https://api.henrikdev.xyz/valorant/v3/matches/\${region}/\${encodeURIComponent(name)}/\${encodeURIComponent(tag)}?filter=competitive&size=3\`,
       { headers: { "Authorization": apiKey } }
     );
     const matches = matchRes.data.data;
@@ -45,9 +46,9 @@ app.get("/api/player/:name/:tag", async (req, res) => {
         id: match.metadata.matchid,
         map: match.metadata.map,
         agent: player.character,
-        score: `${match.teams.red.rounds_won}-${match.teams.blue.rounds_won}`,
+        score: \`\${match.teams.red.rounds_won}-\${match.teams.blue.rounds_won}\`,
         outcome: player.team.toLowerCase() === (match.teams.red.has_won ? "red" : "blue") ? "Victory" : "Defeat",
-        kda: `${stats.kills}/${stats.deaths}/${stats.assists}`,
+        kda: \`\${stats.kills}/\${stats.deaths}/\${stats.assists}\`,
         kdRatio: stats.deaths > 0 ? stats.kills / stats.deaths : stats.kills,
         hsPercentage: Math.round((stats.headshots / (stats.headshots + stats.bodyshots + stats.legshots)) * 100),
         adr: Math.round(stats.damage / match.metadata.rounds_played),
@@ -83,7 +84,7 @@ app.get("/api/player/:name/:tag", async (req, res) => {
       message = errorData.message;
     }
     
-    res.status(status).json({ error: `Henrik API: ${message}` });
+    res.status(status).json({ error: \`Henrik API: \${message}\` });
   }
 });
 
@@ -92,7 +93,7 @@ app.post("/api/chat", async (req, res) => {
     const { message, history } = req.body;
     const model = "gemini-2.5-flash";
     
-    const systemInstruction = `Você é o "Sensei", um treinador de elite de Valorant focado em resultados imediatos.
+    const systemInstruction = \`Você é o "Sensei", um treinador de elite de Valorant focado em resultados imediatos.
 Sua missão é dar conselhos táticos e mecânicos de forma EXTREMAMENTE OBJETIVA e CLARA.
 Diretrizes:
 1. Respostas curtas e diretas (máximo 3-4 frases ou uma lista de pontos).
@@ -100,7 +101,7 @@ Diretrizes:
 3. Sem conversas fúteis: foque no que o jogador deve FAZER para ganhar a próxima partida.
 4. Se o jogador divagar, traga-o de volta para o foco do treinamento.
 5. Personalidade: Sério, pragmático e focado na disciplina.
-Responda sempre em Português do Brasil.`;
+Responda sempre em Português do Brasil.\`;
 
     const chat = ai.chats.create({
       model: model,
@@ -119,3 +120,5 @@ Responda sempre em Português do Brasil.`;
 });
 
 export default app;
+`;
+fs.writeFileSync('api/index.ts', content);

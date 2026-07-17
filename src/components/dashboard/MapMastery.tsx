@@ -11,10 +11,30 @@ interface Props {
 let mapCache: any[] | null = null;
 let mapFetchPromise: Promise<any> | null = null;
 
+const STATIC_MAP_SPLASHES: Record<string, string> = {
+  ascent: "https://media.valorant-api.com/maps/7eae253f-413f-8e33-6107-2c21c0134018/splash.png",
+  bind: "https://media.valorant-api.com/maps/2c963b58-413c-f1b0-f78d-9685a02e43e0/splash.png",
+  haven: "https://media.valorant-api.com/maps/2bee0dc9-4aa5-ae9b-77d0-bd8163b325a5/splash.png",
+  split: "https://media.valorant-api.com/maps/d96cb365-4577-41d3-9345-565741085491/splash.png",
+  fracture: "https://media.valorant-api.com/maps/b5294485-4d60-78a4-e554-7c3ac3ce9485/splash.png",
+  breeze: "https://media.valorant-api.com/maps/2fb9b465-41e5-3d09-7a0c-0d17985159c0/splash.png",
+  icebox: "https://media.valorant-api.com/maps/e2ad38c4-43f4-a87c-5913-af92a7243a72/splash.png",
+  lotus: "https://media.valorant-api.com/maps/2fe4ed3a-450a-9400-69ab-18851b0e8031/splash.png",
+  sunset: "https://media.valorant-api.com/maps/92cede8f-4ac3-bc37-63e2-14ac9e2a71f2/splash.png",
+  pearl: "https://media.valorant-api.com/maps/fd2673d2-4cc7-4458-34cf-a39197206d24/splash.png",
+  abyss: "https://media.valorant-api.com/maps/22697a5c-4ad9-734f-d0d7-5e97e1c504cd/splash.png"
+};
+
 const MapBackground = ({ mapName }: { mapName: string }) => {
-  const [bgUrl, setBgUrl] = useState<string | null>(null);
+  const [bgUrl, setBgUrl] = useState<string>(() => {
+    const key = mapName.toLowerCase().trim();
+    return STATIC_MAP_SPLASHES[key] || "";
+  });
 
   useEffect(() => {
+    // Se já resolvemos com a imagem estática mapeada, não precisamos buscar dinamicamente
+    if (bgUrl) return;
+
     const getMap = async () => {
       try {
         if (!mapCache) {
@@ -29,15 +49,20 @@ const MapBackground = ({ mapName }: { mapName: string }) => {
         
         if (mapCache) {
           const map = mapCache.find((m: any) => m.displayName.toLowerCase() === mapName.toLowerCase());
-          if (map && map.listViewIcon) {
-            setBgUrl(map.listViewIcon);
+          if (map) {
+            // Preferir o splash que é uma imagem de background ampla de alta definição
+            if (map.splash) {
+              setBgUrl(map.splash);
+            } else if (map.listViewIcon) {
+              setBgUrl(map.listViewIcon);
+            }
           }
         }
       } catch (e) {
       }
     };
     getMap();
-  }, [mapName]);
+  }, [mapName, bgUrl]);
 
   if (!bgUrl) return null;
 

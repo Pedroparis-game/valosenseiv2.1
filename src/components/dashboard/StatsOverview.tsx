@@ -84,7 +84,7 @@ export default function StatsOverview({ stats }: Props) {
           />
           <StatBox 
             label="K/D Total" 
-            value={stats.overallKd.toString()} 
+            value={(stats.overallKd ?? 0).toString()} 
             icon={<Activity size={20} />}
             color="text-brand-light"
           />

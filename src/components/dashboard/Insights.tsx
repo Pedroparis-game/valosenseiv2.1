@@ -25,11 +25,11 @@ import { AnimatePresence } from "motion/react";
 export default function Insights({ analysis, stats }: InsightsProps) {
   const [selectedInsight, setSelectedInsight] = React.useState<any>(null);
   const prioritizedInsights = useMemo(() => {
-    return [...analysis.insights].sort((a, b) => {
+    return [...(analysis?.insights || [])].sort((a, b) => {
       const priorityOrder = { high: 0, medium: 1, low: 2 };
       return (priorityOrder[a.priority as keyof typeof priorityOrder] || 0) - (priorityOrder[b.priority as keyof typeof priorityOrder] || 0);
     });
-  }, [analysis.insights]);
+  }, [(analysis?.insights || [])]);
 
   const getPriorityColor = (priority: string) => {
     if (priority === 'high') return 'bg-brand-red text-white border-brand-red';
@@ -37,7 +37,7 @@ export default function Insights({ analysis, stats }: InsightsProps) {
   };
 
   // Determine a Grade (S, A+, A, B+, etc.) based on Impact Score
-  const score = analysis.overallScore;
+  const score = analysis?.overallScore || 0;
   let grade = "C";
   let gradeColor = "text-brand-gray";
   if (score >= 90) { grade = "S"; gradeColor = "text-[#00ffaa] drop-shadow-[0_0_15px_rgba(0,255,170,0.5)]"; }
@@ -74,7 +74,7 @@ export default function Insights({ analysis, stats }: InsightsProps) {
              </div>
              
              <p className="text-lg font-sans font-medium leading-relaxed text-white mb-10 opacity-90 border-l-4 border-brand-red pl-5">
-               {analysis.coachVerdict.summary}
+               {analysis?.coachVerdict?.summary || "Sem resumo disponível."}
              </p>
              
              {/* BLOCOS (Fortes, Melhorar, Dicas) */}
@@ -85,7 +85,7 @@ export default function Insights({ analysis, stats }: InsightsProps) {
                      <h4 className="font-heading uppercase tracking-widest text-brand-light text-sm">Pontos Fortes</h4>
                    </div>
                    <ul className="space-y-4">
-                     {(analysis.coachVerdict.strengths || []).map((str, idx) => (
+                     {(analysis?.coachVerdict?.strengths || []).map((str, idx) => (
                        <li key={idx} className="flex items-start gap-3">
                          <span className="text-[#00ffaa] mt-0.5 text-xs">▶</span>
                          <span className="text-sm font-sans text-brand-light/90 leading-tight">{str}</span>
@@ -100,7 +100,7 @@ export default function Insights({ analysis, stats }: InsightsProps) {
                      <h4 className="font-heading uppercase tracking-widest text-brand-light text-sm">Para Melhorar</h4>
                    </div>
                    <ul className="space-y-4">
-                     {(analysis.coachVerdict.weaknesses || []).map((wk, idx) => (
+                     {(analysis?.coachVerdict?.weaknesses || []).map((wk, idx) => (
                        <li key={idx} className="flex items-start gap-3">
                          <span className="text-amber-400 mt-0.5 text-xs">▶</span>
                          <span className="text-sm font-sans text-brand-light/90 leading-tight">{wk}</span>
@@ -115,7 +115,7 @@ export default function Insights({ analysis, stats }: InsightsProps) {
                      <h4 className="font-heading uppercase tracking-widest text-brand-light text-sm">Recomendações</h4>
                    </div>
                    <ul className="space-y-4">
-                     {(analysis.coachVerdict.recommendations || []).map((rec, idx) => (
+                     {(analysis?.coachVerdict?.recommendations || []).map((rec, idx) => (
                        <li key={idx} className="flex items-start gap-3">
                          <span className="text-brand-red mt-0.5 text-xs">▶</span>
                          <span className="text-sm font-sans text-brand-light/90 leading-tight">{rec}</span>
@@ -126,7 +126,7 @@ export default function Insights({ analysis, stats }: InsightsProps) {
              </div>
 
              <div className="text-center pt-8 border-t border-brand-gray/20">
-                <p className="text-xl font-heading tracking-widest text-brand-light drop-shadow-md italic">"{analysis.coachVerdict.conclusion}"</p>
+                <p className="text-xl font-heading tracking-widest text-brand-light drop-shadow-md italic">"{analysis?.coachVerdict?.conclusion || ""}"</p>
              </div>
           </div>
         </div>
@@ -210,7 +210,7 @@ export default function Insights({ analysis, stats }: InsightsProps) {
             <div className="flex justify-between items-end mb-4">
               <div>
                 <h4 className="text-xs font-sans font-bold uppercase tracking-[0.2em] text-brand-gray mb-1">Evolução Tática</h4>
-                <div className="text-brand-light font-heading uppercase text-xl">Nível {analysis.overallScore}</div>
+                <div className="text-brand-light font-heading uppercase text-xl">Nível {analysis?.overallScore || 0}</div>
               </div>
               <div className="text-right">
                 <div className="text-[10px] font-sans font-bold uppercase tracking-widest text-brand-red mb-1">Próximo Foco</div>
@@ -221,7 +221,7 @@ export default function Insights({ analysis, stats }: InsightsProps) {
               <motion.div 
                 className="h-full bg-brand-red" 
                 initial={{ width: 0 }}
-                whileInView={{ width: `${analysis.overallScore}%` }}
+                whileInView={{ width: `${analysis?.overallScore || 0}%` }}
                 viewport={{ once: true }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
               />
@@ -252,7 +252,7 @@ export default function Insights({ analysis, stats }: InsightsProps) {
         <div className="lg:col-span-7">
            <div className="valo-card h-full">
              <h4 className="text-xs font-sans font-bold uppercase tracking-[0.4em] mb-8 text-brand-gray border-b border-brand-gray/20 pb-2 w-full text-center">Competências Específicas</h4>
-             <TacticalBreakdown data={analysis.tacticalBreakdown} />
+             <TacticalBreakdown data={analysis?.tacticalBreakdown || { mira: { label: "Mira", value: 0, average: 0, description: "" }, gameSense: { label: "Game Sense", value: 0, average: 0, description: "" }, economia: { label: "Economia", value: 0, average: 0, description: "" }, posicionamento: { label: "Posicionamento", value: 0, average: 0, description: "" }, utilitarias: { label: "Utilitárias", value: 0, average: 0, description: "" } }} />
            </div>
         </div>
       </section>

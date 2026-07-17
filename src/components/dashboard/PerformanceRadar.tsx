@@ -16,11 +16,11 @@ interface Props {
 
 export default function PerformanceRadar({ analysis }: Props) {
   const data = [
-    { subject: 'Mira'.toUpperCase(), value: analysis.tacticalBreakdown.mira.value, fullMark: 100, desc: "Precisão e consistência de tiros na cabeça." },
-    { subject: 'Noção'.toUpperCase(), value: analysis.tacticalBreakdown.gameSense.value, fullMark: 100, desc: "Leitura de jogo, rotações e tomadas de decisão." },
-    { subject: 'Eco'.toUpperCase(), value: analysis.tacticalBreakdown.economia.value, fullMark: 100, desc: "Gestão de créditos e compras inteligentes." },
-    { subject: 'Posicion.'.toUpperCase(), value: analysis.tacticalBreakdown.posicionamento.value, fullMark: 100, desc: "Escolha de ângulos e segurança nos duelos." },
-    { subject: 'Utilities'.toUpperCase(), value: analysis.tacticalBreakdown.utilitarias.value, fullMark: 100, desc: "Eficácia no uso de habilidades e ultimates." },
+    { subject: 'Mira'.toUpperCase(), value: analysis?.tacticalBreakdown?.mira?.value || 0, fullMark: 100, desc: "Precisão e consistência de tiros na cabeça." },
+    { subject: 'Noção'.toUpperCase(), value: analysis?.tacticalBreakdown?.gameSense?.value || 0, fullMark: 100, desc: "Leitura de jogo, rotações e tomadas de decisão." },
+    { subject: 'Eco'.toUpperCase(), value: analysis?.tacticalBreakdown?.economia?.value || 0, fullMark: 100, desc: "Gestão de créditos e compras inteligentes." },
+    { subject: 'Posicion.'.toUpperCase(), value: analysis?.tacticalBreakdown?.posicionamento?.value || 0, fullMark: 100, desc: "Escolha de ângulos e segurança nos duelos." },
+    { subject: 'Utilities'.toUpperCase(), value: analysis?.tacticalBreakdown?.utilitarias?.value || 0, fullMark: 100, desc: "Eficácia no uso de habilidades e ultimates." },
   ];
 
   const CustomTooltip = ({ active, payload }: any) => {

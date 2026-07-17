@@ -63,9 +63,12 @@ app.get("/api/player/:name/:tag", async (req, res) => {
     res.json({
       name: formalName || name,
       tag: formalTag || tag,
-      rank: matches[0]?.players.all_players.find((p: any) => p.puuid === puuid)?.currenttier_patched || "Sem Rank",
+      rank: matches[0]?.players?.all_players?.find((p: any) => p.puuid === puuid)?.currenttier_patched || "Sem Rank",
       overallHs: parseFloat(avgHs.toFixed(1)) || 0,
       overallWinRate: recentMatches.length > 0 ? Math.round((recentMatches.filter((m: any) => m.outcome === "Victory").length / recentMatches.length) * 100) : 0,
+      overallKd: parseFloat((recentMatches.reduce((acc: number, m: any) => acc + (m.kdRatio || 0), 0) / (recentMatches.length || 1)).toFixed(2)) || 0,
+      rr: 0,
+      rankImageUrl: "",
       recentMatches
     });
   } catch (error: any) {

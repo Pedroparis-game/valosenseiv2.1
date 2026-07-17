@@ -1,44 +1,10 @@
 const fs = require('fs');
+let content = fs.readFileSync('src/services/api.ts', 'utf8');
 
-const content = `import { PlayerStats, AnalysisResult, TrainingInsight } from "../types";
-
-export const apiService = {
-  async getPlayerStats(name: string, tag: string): Promise<PlayerStats> {
-    try {
-      const response = await fetch(\`/api/player/\${name.trim()}/\${tag.trim()}\`);
-      
-      if (!response.ok) {
-        let serverError = "Falha na varredura tática. O perfil pode estar privado ou inacessível.";
-        try {
-          const errorData = await response.json();
-          if (errorData && errorData.error) {
-            serverError = errorData.error;
-          }
-        } catch (e) {
-          // ignore json parse error
-        }
-        
-        if (response.status === 404) {
-          if (serverError.includes("Account not found")) {
-            throw new Error("Agente não encontrado. Verifique se o Riot ID (Nome e Tag) está correto.");
-          } else if (serverError.includes("Error while fetching needed match data")) {
-            throw new Error("A API encontrou o perfil, mas não há dados de partidas recentes. Jogue algumas partidas e tente novamente.");
-          }
-          throw new Error("Agente não encontrado ou sem dados suficientes.\\nDetalhes: " + serverError);
-        } else if (response.status === 429) {
-          throw new Error("Sistemas sobrecarregados (Rate Limit). Aguarde alguns instantes e tente novamente.");
-        } else {
-          throw new Error(serverError);
-        }
-      }
-      return response.json();
-    } catch (error: any) {
-      throw new Error(error.message || "Erro desconhecido na rede neural");
-    }
-  }
-};
-
-export const analysisService = {
+// Replace geminiService entirely
+content = content.replace(
+  /export const geminiService = \{[\s\S]*\}\};/,
+  `export const analysisService = {
   async analyzeMatch(playerData: PlayerStats): Promise<AnalysisResult> {
     // Generate deterministic analysis locally based on actual data
     const hsRate = playerData.overallHs || 0;
@@ -140,6 +106,7 @@ export const analysisService = {
       }
     };
   }
-};
-`;
+};`
+);
+
 fs.writeFileSync('src/services/api.ts', content);

@@ -23,7 +23,7 @@ export default function StatsOverview({ stats }: Props) {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="valo-card flex flex-col sm:flex-row items-center gap-8 p-10 h-full group">
+        <div className="valo-card flex flex-col sm:flex-row items-center gap-8 p-10 h-full group relative overflow-hidden transition-all duration-500 hover:border-brand-red/50 hover:shadow-[0_0_30px_rgba(255,70,85,0.15)]">
           <div className="w-32 h-32 bg-brand-darker border border-brand-red/30 flex items-center justify-center relative shadow-[0_0_15px_rgba(255,70,85,0.2)] shrink-0 overflow-hidden">
              <motion.img 
                initial={{ scale: 0.5, rotate: -20 }}
@@ -36,6 +36,8 @@ export default function StatsOverview({ stats }: Props) {
              />
              <div className="absolute inset-0 bg-brand-red/10 animate-pulse pointer-events-none" />
           </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-light/5 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none" />
+
           
           <div className="flex-grow text-center sm:text-left">
              <div className="flex items-center justify-center sm:justify-start gap-2 mb-2 text-brand-red">
@@ -69,7 +71,7 @@ export default function StatsOverview({ stats }: Props) {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="valo-card grid grid-cols-3 gap-4 h-full p-10 divide-x divide-brand-gray/20">
+        <div className="valo-card grid grid-cols-3 gap-4 h-full p-10 divide-x divide-brand-gray/20 transition-all duration-500 hover:border-brand-red/50 hover:shadow-[0_0_30px_rgba(255,70,85,0.15)]">
           <StatBox 
             label="Win Rate" 
             value={`${stats.overallWinRate}%`} 

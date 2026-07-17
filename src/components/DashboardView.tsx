@@ -20,14 +20,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   handleRefresh,
   handleNewSearch
 }) => {
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.2 }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } }
+  };
+
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20 }}
+      variants={container}
+      initial="hidden"
+      animate="show"
       className="max-w-6xl mx-auto px-2 md:px-0"
     >
-      <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 gap-6 border-b border-brand-gray/20 pb-10">
+      <motion.div variants={item} className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 gap-6 border-b border-brand-gray/20 pb-10">
          <div className="text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
               <span className="text-xs font-sans font-bold uppercase opacity-80 tracking-[0.2em] bg-brand-red text-white px-3 py-1">Telemetria de Agente</span>
@@ -54,8 +67,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                Voltar
              </button>
           </div>
-      </div>
-
+      </motion.div>
       <div className="space-y-12">
         <StatsOverview stats={stats} />
         
@@ -74,8 +86,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <Target size={24} className="absolute -top-2 -right-2 text-white animate-bounce" />
             </div>
             <div className="text-center relative z-10">
-              <div className="font-heading uppercase text-4xl tracking-widest mb-2 animate-pulse text-brand-light">Análise em Progresso...</div>
-              <p className="text-sm font-sans uppercase tracking-[0.2em] text-brand-gray">Processando vetores balísticos e log de combate</p>
+              <div className="font-heading uppercase text-4xl tracking-widest mb-2 animate-pulse text-brand-light">Sincronizando Dados...</div>
+              <p className="text-sm font-sans uppercase tracking-[0.2em] text-brand-gray">Estabelecendo conexão com o servidor tático</p>
             </div>
           </motion.div>
         )}

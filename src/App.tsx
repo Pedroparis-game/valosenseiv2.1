@@ -7,11 +7,10 @@ import { useState, type FormEvent, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Loader2, Target } from "lucide-react";
 import { AnalysisResult, PlayerStats } from "./types";
-import { apiService, geminiService } from "./services/api";
+import { apiService, analysisService } from "./services/api";
 import { ThemeBackground } from "./components/ThemeBackground";
 import { LandingPage } from "./components/LandingPage";
 import { DashboardView } from "./components/DashboardView";
-import SenseiChat from "./components/dashboard/SenseiChat";
 
 export default function App() {
   const [riotId, setRiotId] = useState("");
@@ -43,7 +42,8 @@ export default function App() {
       const playerStats = await apiService.getPlayerStats(name, tag);
       setStats(playerStats);
       
-      const cacheKey = `analysis_v1.8_${name.toLowerCase()}_${tag.toLowerCase()}`;
+      const latestMatchId = playerStats.recentMatches?.[0]?.id || 'nomatch';
+      const cacheKey = `analysis_v1.9_${name.toLowerCase()}_${tag.toLowerCase()}_${latestMatchId}`;
       
       if (!isRefresh) {
         const savedAnalysis = localStorage.getItem(cacheKey);
@@ -54,7 +54,7 @@ export default function App() {
         }
       }
 
-      const analysisData = await geminiService.analyzeMatch(playerStats);
+      const analysisData = await analysisService.analyzeMatch(playerStats);
       setAnalysis(analysisData);
       localStorage.setItem(cacheKey, JSON.stringify(analysisData));
     } catch (err: any) {
@@ -134,7 +134,6 @@ export default function App() {
         </p>
       </footer>
 
-      {stats && <SenseiChat />}
     </div>
   );
 }

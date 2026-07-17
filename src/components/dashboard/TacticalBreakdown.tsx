@@ -28,7 +28,7 @@ export default function TacticalBreakdown({ data }: Props) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {metrics.map(([key, metric], idx) => (
         <motion.div
           key={key}
@@ -37,12 +37,21 @@ export default function TacticalBreakdown({ data }: Props) {
           viewport={{ once: true }}
           transition={{ delay: idx * 0.05 }}
         >
-          <div className="valo-card flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left !p-5 group relative gap-5">
-            <div className="p-4 bg-brand-red/10 group-hover:bg-brand-red/20 border border-brand-red/20 transition-colors shrink-0">
-              {getIcon(key)}
+          <div className="flex flex-col items-start p-6 group relative gap-5 bg-brand-dark/40 border border-brand-gray/10 hover:border-brand-red/30 transition-all duration-300 hover:bg-brand-dark/80 rounded-sm h-full">
+            <div className="flex items-center gap-4 w-full">
+              <div className="p-4 bg-brand-darker group-hover:bg-brand-red/10 border border-brand-gray/20 group-hover:border-brand-red/40 transition-colors shrink-0 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                {getIcon(key)}
+              </div>
+              <div className="flex-grow flex justify-between items-baseline">
+                <h4 className="font-heading uppercase tracking-widest text-lg text-brand-light">{metric.label}</h4>
+                <div className="flex items-baseline gap-1">
+                  <span className="font-heading text-2xl text-white">{metric.value}</span>
+                  <span className="text-xs font-sans text-brand-gray">%</span>
+                </div>
+              </div>
             </div>
             
-            <div className="flex-grow w-full">
+            <div className="flex-grow flex flex-col justify-end w-full mt-2">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
                 <div className="text-[10px] font-sans font-bold uppercase tracking-[0.2em] text-brand-gray">
                   {metric.label}
@@ -53,13 +62,14 @@ export default function TacticalBreakdown({ data }: Props) {
               </div>
               
               {/* Progress Bar */}
-              <div className="w-full bg-brand-darker h-2 overflow-hidden border border-brand-gray/20 mb-3">
+              <div className="w-full bg-[#0a0f16] h-1.5 overflow-hidden border border-brand-gray/10 mb-3 rounded-sm relative shadow-inner">
                 <motion.div 
                   initial={{ width: 0 }}
                   whileInView={{ width: `${metric.value}%` }}
                   viewport={{ once: true }}
                   transition={{ duration: 1, delay: 0.2 + (idx * 0.1) }}
-                  className="h-full bg-brand-red shadow-[0_0_10px_rgba(255,70,85,0.5)]"
+                  className="h-full bg-brand-red shadow-[0_0_15px_rgba(255,70,85,0.8)] relative"
+                  style={{ boxShadow: "0 0 20px rgba(255, 70, 85, 0.4), inset 0 0 5px rgba(255,255,255,0.5)" }}
                 />
               </div>
 

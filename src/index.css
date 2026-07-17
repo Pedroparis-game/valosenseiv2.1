@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Teko", "Oswald", sans-serif;
+  
+  --color-brand-red: #ff4655;
+  --color-brand-dark: #0f1923;
+  --color-brand-darker: #111111;
+  --color-brand-light: #ece8e1;
+  --color-brand-gray: #8b978f;
+  
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-brand-darker text-brand-light font-sans overflow-x-hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-wide uppercase;
+  }
+}
+
+@layer components {
+  .valo-btn {
+    @apply relative px-8 py-4 font-heading text-2xl uppercase tracking-widest text-brand-light bg-brand-dark overflow-hidden transition-all duration-300;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+    border: 1px solid rgba(236, 232, 225, 0.2);
+  }
+
+  .valo-btn::before {
+    content: '';
+    @apply absolute inset-0 bg-brand-red -z-10 translate-y-full transition-transform duration-300 ease-in-out;
+  }
+
+  .valo-btn:hover::before {
+    @apply translate-y-0;
+  }
+
+  .valo-btn:hover {
+    @apply text-white border-transparent shadow-[0_0_15px_rgba(255,70,85,0.5)];
+  }
+
+  .valo-btn:active {
+    @apply scale-95;
+  }
+
+  .valo-input {
+    @apply bg-brand-dark/80 text-brand-light border-2 border-brand-gray/30 p-4 font-sans focus:outline-none focus:border-brand-red transition-colors w-full;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+  }
+
+  .valo-card {
+    @apply bg-brand-dark/90 border border-brand-gray/20 p-6 relative overflow-hidden backdrop-blur-sm transition-all duration-300;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+  }
+  
+  .valo-card:hover {
+    @apply border-brand-red/50 shadow-[0_0_20px_rgba(255,70,85,0.15)];
+  }
+
+  .valo-card::after {
+    content: '';
+    @apply absolute bottom-0 right-0 w-4 h-4 bg-brand-red/80;
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  }
+
+  .valo-glitch {
+    position: relative;
+  }
+  
+  .valo-glitch::before,
+  .valo-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+  
+  .valo-glitch::before {
+    left: 2px;
+    text-shadow: -1px 0 red;
+    clip: rect(24px, 550px, 90px, 0);
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+  }
+  
+  .valo-glitch::after {
+    left: -2px;
+    text-shadow: -1px 0 blue;
+    clip: rect(85px, 550px, 140px, 0);
+    animation: glitch-anim 2.5s infinite linear alternate-reverse;
+  }
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(10px, 9999px, 83px, 0); }
+  20% { clip: rect(61px, 9999px, 19px, 0); }
+  40% { clip: rect(33px, 9999px, 52px, 0); }
+  60% { clip: rect(98px, 9999px, 44px, 0); }
+  80% { clip: rect(14px, 9999px, 78px, 0); }
+  100% { clip: rect(45px, 9999px, 11px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip: rect(65px, 9999px, 100px, 0); }
+  20% { clip: rect(3px, 9999px, 29px, 0); }
+  40% { clip: rect(81px, 9999px, 56px, 0); }
+  60% { clip: rect(12px, 9999px, 88px, 0); }
+  80% { clip: rect(44px, 9999px, 7px, 0); }
+  100% { clip: rect(90px, 9999px, 33px, 0); }
+}

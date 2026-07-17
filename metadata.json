@@ -1,0 +1,6 @@
+{
+  "name": "Valosensei",
+  "description": "Valorant player statistics and AI coaching dashboard built from Pedroparis-game/valosensei.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

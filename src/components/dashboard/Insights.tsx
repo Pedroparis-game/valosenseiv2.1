@@ -76,71 +76,71 @@ export default function Insights({ analysis, stats }: InsightsProps) {
           <div className="flex-grow h-[1px] bg-brand-gray/20" />
         </div>
         
-        <div className="valo-card !p-12 md:!p-16 relative overflow-hidden bg-brand-dark/95 border-brand-red shadow-[0_0_20px_rgba(255,70,85,0.1)]">
-          <Quote className="absolute top-6 left-6 text-brand-gray/10" size={120} />
+        <div className="valo-card !p-8 md:!p-12 relative overflow-hidden bg-[#0c121a]/95 border border-brand-gray/15 hover:border-brand-red/30 transition-all duration-300">
+          <Quote className="absolute top-6 left-6 text-brand-gray/5 pointer-events-none" size={80} />
           
           <div className="relative z-10 w-full text-left">
-             <div className="flex items-center gap-4 mb-8">
-                <div className="p-3 bg-brand-red/10 border border-brand-red/30">
-                  <Brain size={32} className="text-brand-red" />
+             <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-brand-red/5 border border-brand-red/20">
+                  <Brain size={24} className="text-brand-red" />
                 </div>
-                <h3 className="text-3xl font-heading uppercase tracking-widest text-brand-light drop-shadow-md">Diagnóstico do Sensei</h3>
+                <h3 className="text-2xl font-heading uppercase tracking-widest text-brand-light">Diagnóstico do Sensei</h3>
              </div>
              
-             <p className="text-lg font-sans font-medium leading-relaxed text-white mb-10 opacity-90 border-l-4 border-brand-red pl-5">
+             <p className="text-base font-sans font-medium leading-relaxed text-white mb-8 opacity-90 border-l-2 border-brand-red pl-5">
                {analysis?.coachVerdict?.summary || "Sem resumo disponível."}
              </p>
              
              {/* BLOCOS (Fortes, Melhorar, Dicas) */}
-             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
-                <div className="bg-brand-dark/60 border border-brand-gray/10 p-6 rounded-sm hover:border-[#00ffaa]/50 transition-colors">
-                   <div className="flex items-center gap-3 mb-6 border-b border-[#00ffaa]/20 pb-3">
-                     <CheckCircle2 className="text-[#00ffaa]" size={20} />
+             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div className="bg-[#11161d]/50 border border-brand-gray/10 p-6 rounded-sm hover:border-[#00ffaa]/30 transition-colors">
+                   <div className="flex items-center gap-3 mb-4 border-b border-[#00ffaa]/10 pb-3">
+                     <CheckCircle2 className="text-[#00ffaa]" size={18} />
                      <h4 className="font-heading uppercase tracking-widest text-brand-light text-sm">Pontos Fortes</h4>
                    </div>
-                   <ul className="space-y-4">
+                   <ul className="space-y-3">
                      {(analysis?.coachVerdict?.strengths || []).map((str, idx) => (
-                       <li key={idx} className="flex items-start gap-3">
-                         <span className="text-[#00ffaa] mt-0.5 text-xs">▶</span>
-                         <span className="text-sm font-sans text-brand-light/90 leading-tight">{str}</span>
+                       <li key={idx} className="flex items-start gap-2.5">
+                         <span className="text-[#00ffaa] mt-1 text-[10px]">▶</span>
+                         <span className="text-xs font-sans text-brand-light/90 leading-relaxed">{str}</span>
                        </li>
                      ))}
                    </ul>
                 </div>
 
-                <div className="bg-brand-dark/60 border border-brand-gray/10 p-6 rounded-sm hover:border-amber-400/50 transition-colors">
-                   <div className="flex items-center gap-3 mb-6 border-b border-amber-400/20 pb-3">
-                     <AlertTriangle className="text-amber-400" size={20} />
+                <div className="bg-[#11161d]/50 border border-brand-gray/10 p-6 rounded-sm hover:border-amber-400/30 transition-colors">
+                   <div className="flex items-center gap-3 mb-4 border-b border-amber-400/10 pb-3">
+                     <AlertTriangle className="text-amber-400" size={18} />
                      <h4 className="font-heading uppercase tracking-widest text-brand-light text-sm">Para Melhorar</h4>
                    </div>
-                   <ul className="space-y-4">
+                   <ul className="space-y-3">
                      {(analysis?.coachVerdict?.weaknesses || []).map((wk, idx) => (
-                       <li key={idx} className="flex items-start gap-3">
-                         <span className="text-amber-400 mt-0.5 text-xs">▶</span>
-                         <span className="text-sm font-sans text-brand-light/90 leading-tight">{wk}</span>
+                       <li key={idx} className="flex items-start gap-2.5">
+                         <span className="text-amber-400 mt-1 text-[10px]">▶</span>
+                         <span className="text-xs font-sans text-brand-light/90 leading-relaxed">{wk}</span>
                        </li>
                      ))}
                    </ul>
                 </div>
 
-                <div className="bg-brand-dark/60 border border-brand-gray/10 p-6 rounded-sm hover:border-brand-red/50 transition-colors">
-                   <div className="flex items-center gap-3 mb-6 border-b border-brand-red/20 pb-3">
-                     <Brain className="text-brand-red" size={20} />
+                <div className="bg-[#11161d]/50 border border-brand-gray/10 p-6 rounded-sm hover:border-brand-red/30 transition-colors">
+                   <div className="flex items-center gap-3 mb-4 border-b border-brand-red/10 pb-3">
+                     <Brain className="text-brand-red" size={18} />
                      <h4 className="font-heading uppercase tracking-widest text-brand-light text-sm">Recomendações</h4>
                    </div>
-                   <ul className="space-y-4">
+                   <ul className="space-y-3">
                      {(analysis?.coachVerdict?.recommendations || []).map((rec, idx) => (
-                       <li key={idx} className="flex items-start gap-3">
-                         <span className="text-brand-red mt-0.5 text-xs">▶</span>
-                         <span className="text-sm font-sans text-brand-light/90 leading-tight">{rec}</span>
+                       <li key={idx} className="flex items-start gap-2.5">
+                         <span className="text-brand-red mt-1 text-[10px]">▶</span>
+                         <span className="text-xs font-sans text-brand-light/90 leading-relaxed">{rec}</span>
                        </li>
                      ))}
                    </ul>
                 </div>
              </div>
 
-             <div className="text-center pt-8 border-t border-brand-gray/20">
-                <p className="text-xl font-heading tracking-widest text-brand-light drop-shadow-md italic">"{analysis?.coachVerdict?.conclusion || ""}"</p>
+             <div className="text-center pt-6 border-t border-brand-gray/10">
+                 <p className="text-lg font-heading tracking-widest text-brand-light/80 italic">"{analysis?.coachVerdict?.conclusion || ""}"</p>
              </div>
           </div>
         </div>
@@ -153,7 +153,7 @@ export default function Insights({ analysis, stats }: InsightsProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
           <div className="lg:col-span-4 flex flex-col">
             {/* 1. Cabeçalho do Perfil & Classificação */}
-            <div className="valo-card !p-6 flex items-center justify-between border-b-4 border-b-brand-red bg-[#11161d] shadow-lg relative overflow-hidden group h-full">
+            <div className="valo-card !p-6 flex items-center justify-between border-l-2 border-brand-red bg-[#11161d] shadow-sm relative overflow-hidden group h-full">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-brand-gray/30 p-1 bg-brand-dark relative group-hover:border-brand-red/50 transition-colors">
                   <div className="absolute inset-0 bg-brand-red/10 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -252,9 +252,9 @@ export default function Insights({ analysis, stats }: InsightsProps) {
                   <div className="text-brand-light text-xs font-sans font-bold uppercase tracking-wider">{nextFocus}</div>
                 </div>
               </div>
-              <div className="h-3 w-full bg-[#0a0f16] border border-brand-gray/10 rounded-full overflow-hidden shadow-inner relative z-10">
+              <div className="h-1.5 w-full bg-brand-darker border border-brand-gray/15 rounded-none overflow-hidden relative z-10">
                 <motion.div 
-                  className="h-full bg-brand-red shadow-[0_0_15px_rgba(255,70,85,0.8)]"
+                  className="h-full bg-brand-red"
                   initial={{ width: 0 }}
                   whileInView={{ width: `${analysis?.overallScore || 0}%` }}
                   viewport={{ once: true }}

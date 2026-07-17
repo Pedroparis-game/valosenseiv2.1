@@ -16,35 +16,34 @@ export default function StatsOverview({ stats }: Props) {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
       {/* CARD DE RANKING */}
       <motion.div 
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="valo-card flex flex-col sm:flex-row items-center gap-8 p-10 h-full group relative overflow-hidden transition-all duration-500 hover:border-brand-red/50 hover:shadow-[0_0_30px_rgba(255,70,85,0.15)]">
-          <div className="w-32 h-32 bg-brand-darker border border-brand-red/30 flex items-center justify-center relative shadow-[0_0_15px_rgba(255,70,85,0.2)] shrink-0 overflow-hidden">
+        <div className="valo-card flex flex-col sm:flex-row items-center gap-8 p-8 h-full group relative overflow-hidden transition-all duration-300 bg-[#0c121a]/95 border-brand-gray/15 hover:border-brand-red/30">
+          <div className="w-28 h-28 bg-brand-darker border border-brand-gray/15 flex items-center justify-center relative shrink-0 overflow-hidden">
              <motion.img 
                initial={{ scale: 0.5, rotate: -20 }}
                animate={{ scale: 1, rotate: 0 }}
                transition={{ type: "spring", stiffness: 200, damping: 15 }}
                src={getRankIcon(stats.rank)} 
                alt={stats.rank}
-               className="w-24 h-24 object-contain group-hover:scale-110 transition-transform"
+               className="w-20 h-20 object-contain group-hover:scale-105 transition-transform"
                referrerPolicy="no-referrer"
              />
-             <div className="absolute inset-0 bg-brand-red/10 animate-pulse pointer-events-none" />
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-light/5 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none" />
 
           
           <div className="flex-grow text-center sm:text-left">
              <div className="flex items-center justify-center sm:justify-start gap-2 mb-2 text-brand-red">
-                <Trophy size={16} />
+                <Trophy size={14} />
                 <span className="text-xs font-sans font-bold uppercase tracking-[0.3em] text-brand-gray">Classificação Oficial</span>
              </div>
-             <h3 className="text-5xl font-heading uppercase leading-none tracking-widest mb-6 text-white drop-shadow-[0_2px_10px_rgba(255,70,85,0.4)]">
+             <h3 className="text-4xl md:text-5xl font-heading uppercase leading-none tracking-widest mb-6 text-white">
                {stats.rank}
              </h3>
              <div className="space-y-3">
@@ -52,12 +51,12 @@ export default function StatsOverview({ stats }: Props) {
                    <span className="text-[10px] font-sans font-bold uppercase text-brand-gray tracking-widest">Progresso de Ranque</span>
                    <span className="text-sm font-heading tracking-widest text-brand-light">{stats.rr}/100 RR</span>
                 </div>
-                <div className="h-2 w-full bg-brand-darker rounded-none overflow-hidden border border-brand-gray/20">
+                <div className="h-1.5 w-full bg-brand-darker rounded-none overflow-hidden border border-brand-gray/15">
                    <motion.div 
                      initial={{ width: 0 }}
                      animate={{ width: `${stats.rr}%` }}
                      transition={{ duration: 1.5, delay: 0.5, ease: "circOut" }}
-                     className="h-full bg-brand-red shadow-[0_0_15px_rgba(255,70,85,0.6)]" 
+                     className="h-full bg-brand-red" 
                    />
                 </div>
              </div>
@@ -71,23 +70,23 @@ export default function StatsOverview({ stats }: Props) {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="valo-card grid grid-cols-3 gap-4 h-full p-10 divide-x divide-brand-gray/20 transition-all duration-500 hover:border-brand-red/50 hover:shadow-[0_0_30px_rgba(255,70,85,0.15)]">
+        <div className="valo-card grid grid-cols-3 gap-4 h-full p-8 divide-x divide-brand-gray/15 transition-all duration-300 bg-[#0c121a]/95 border-brand-gray/15 hover:border-brand-red/30">
           <StatBox 
             label="Win Rate" 
             value={`${stats.overallWinRate}%`} 
-            icon={<TrendingUp size={20} />}
+            icon={<TrendingUp size={18} />}
             color="text-white"
           />
           <StatBox 
             label="Headshot" 
             value={`${stats.overallHs}%`} 
-            icon={<Target size={20} />}
+            icon={<Target size={18} />}
             color="text-brand-red"
           />
           <StatBox 
             label="K/D Total" 
             value={(stats.overallKd ?? 0).toString()} 
-            icon={<Activity size={20} />}
+            icon={<Activity size={18} />}
             color="text-brand-light"
           />
         </div>
@@ -98,11 +97,11 @@ export default function StatsOverview({ stats }: Props) {
 
 const StatBox = ({ label, value, icon, color }: any) => (
   <div className="flex flex-col items-center justify-center text-center px-2">
-    <div className={`mb-4 p-3 border border-brand-gray/20 bg-brand-darker/50 text-brand-gray group-hover:border-brand-red/50 transition-colors`}>
+    <div className="mb-3 p-2.5 border border-brand-gray/15 bg-brand-darker text-brand-gray transition-colors">
        {icon}
     </div>
-    <div className="text-[10px] font-sans font-bold uppercase text-brand-gray mb-2 tracking-[0.2em]">{label}</div>
-    <div className={`text-4xl md:text-5xl font-heading tracking-widest drop-shadow-[0_2px_5px_rgba(0,0,0,0.5)] ${color}`}>{value}</div>
+    <div className="text-[10px] font-sans font-bold uppercase text-brand-gray mb-1 tracking-[0.2em]">{label}</div>
+    <div className={`text-3xl md:text-4xl font-heading tracking-widest ${color}`}>{value}</div>
   </div>
 );
 

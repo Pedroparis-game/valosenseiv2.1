@@ -37,22 +37,23 @@ export default function StatsOverview({ stats }: Props) {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="valo-card flex flex-col sm:flex-row items-center gap-8 p-8 h-full group relative overflow-hidden transition-all duration-300 bg-[#0c121a]/95 border-brand-gray/15 hover:border-brand-red/30">
-          <div className="w-28 h-28 bg-brand-darker border border-brand-gray/15 flex items-center justify-center relative shrink-0 overflow-hidden">
+        <div className="valo-card flex flex-col sm:flex-row items-center gap-8 p-8 h-full group relative overflow-hidden">
+          <div className="w-32 h-32 bg-brand-darker border border-brand-red/30 flex items-center justify-center relative shrink-0 overflow-hidden shadow-[0_0_20px_rgba(255,70,85,0.15)] group-hover:shadow-[0_0_30px_rgba(255,70,85,0.4)] group-hover:border-brand-red/80 transition-all duration-300">
+             <div className="absolute inset-0 bg-brand-red/10 group-hover:bg-brand-red/20 transition-colors duration-300" />
              <motion.img 
                initial={{ scale: 0.5, rotate: -20 }}
                animate={{ scale: 1, rotate: 0 }}
                transition={{ type: "spring", stiffness: 200, damping: 15 }}
                src={getRankIcon(stats.rank)} 
                alt={stats.rank}
-               className="w-20 h-20 object-contain group-hover:scale-105 transition-transform"
+               className="w-24 h-24 object-contain group-hover:scale-110 group-hover:rotate-[5deg] transition-all duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] group-hover:drop-shadow-[0_0_25px_rgba(255,70,85,0.6)] relative z-10"
                referrerPolicy="no-referrer"
              />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-light/5 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-light/10 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-[1.5s] ease-in-out pointer-events-none" />
 
           
-          <div className="flex-grow text-center sm:text-left">
+          <div className="flex-grow text-center sm:text-left z-10">
              <div className="flex items-center justify-center sm:justify-start gap-2 mb-2 text-brand-red">
                 <Trophy size={14} />
                 <span className="text-xs font-sans font-bold uppercase tracking-[0.3em] text-brand-gray">Classificação Oficial</span>
@@ -84,23 +85,23 @@ export default function StatsOverview({ stats }: Props) {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="valo-card grid grid-cols-3 gap-4 h-full p-8 divide-x divide-brand-gray/15 transition-all duration-300 bg-[#0c121a]/95 border-brand-gray/15 hover:border-brand-red/30">
+        <div className="valo-card grid grid-cols-3 gap-4 h-full p-8 divide-x divide-brand-gray/15">
           <StatBox 
             label="Win Rate" 
             value={`${stats.overallWinRate}%`} 
-            icon={<TrendingUp size={18} />}
-            color="text-white"
+            icon={<TrendingUp size={22} />}
+            color="text-brand-light"
           />
           <StatBox 
             label="Headshot" 
             value={`${stats.overallHs}%`} 
-            icon={<Target size={18} />}
-            color="text-brand-red"
+            icon={<Target size={22} />}
+            color="text-brand-red drop-shadow-[0_0_10px_rgba(255,70,85,0.6)]"
           />
           <StatBox 
             label="K/D Total" 
             value={(stats.overallKd ?? 0).toString()} 
-            icon={<Activity size={18} />}
+            icon={<Activity size={22} />}
             color="text-brand-light"
           />
         </div>
@@ -110,12 +111,12 @@ export default function StatsOverview({ stats }: Props) {
 }
 
 const StatBox = ({ label, value, icon, color }: any) => (
-  <div className="flex flex-col items-center justify-center text-center px-2">
-    <div className="mb-3 p-2.5 border border-brand-gray/15 bg-brand-darker text-brand-gray transition-colors">
+  <div className="flex flex-col items-center justify-center text-center px-2 group">
+    <div className="mb-4 p-3 rounded bg-brand-darker border border-brand-gray/20 text-brand-light group-hover:border-brand-red/60 group-hover:text-brand-red transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(255,70,85,0.3)] group-hover:-translate-y-1">
        {icon}
     </div>
-    <div className="text-[10px] font-sans font-bold uppercase text-brand-gray mb-1 tracking-[0.2em]">{label}</div>
-    <div className={`text-3xl md:text-4xl font-heading tracking-widest ${color}`}>{value}</div>
+    <div className="text-[10px] font-sans font-bold uppercase text-brand-gray mb-1 tracking-[0.2em] group-hover:text-brand-light transition-colors">{label}</div>
+    <div className={`text-4xl md:text-5xl font-heading tracking-widest transition-transform duration-300 group-hover:scale-110 ${color}`}>{value}</div>
   </div>
 );
 

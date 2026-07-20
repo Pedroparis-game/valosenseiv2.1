@@ -5,6 +5,9 @@ import { PlayerStats, AnalysisResult } from "../types";
 import StatsOverview from "./dashboard/StatsOverview";
 import Insights from "./dashboard/Insights";
 import TacticalLibrary from "./dashboard/TacticalLibrary";
+import MatchHistory from "./dashboard/MatchHistory";
+import WeaponStats from "./dashboard/WeaponStats";
+import DailyGoals from "./dashboard/DailyGoals";
 
 interface DashboardViewProps {
   stats: PlayerStats;
@@ -108,7 +111,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <StatsOverview stats={stats} />
             
             {analysis ? (
-              <Insights analysis={analysis} stats={stats} />
+              <>
+                <Insights analysis={analysis} stats={stats} />
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-auto md:h-[600px]">
+                   <MatchHistory matches={stats.recentMatches} />
+                   <div className="flex flex-col gap-8 h-full">
+                     <WeaponStats weapons={analysis.weaponStats || []} />
+                     <DailyGoals goals={analysis.dailyGoals || []} />
+                   </div>
+                </div>
+              </>
             ) : (
               <motion.div 
                 initial={{ opacity: 0 }}

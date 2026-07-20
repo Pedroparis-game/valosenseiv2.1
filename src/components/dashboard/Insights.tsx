@@ -92,15 +92,16 @@ export default function Insights({ analysis, stats }: InsightsProps) {
           <div className="flex-grow h-[1px] bg-brand-gray/20" />
         </div>
         
-        <div className="valo-card !p-8 md:!p-12 relative overflow-hidden bg-[#0c121a]/95 border border-brand-gray/15 hover:border-brand-red/30 transition-all duration-300">
-          <Quote className="absolute top-6 left-6 text-brand-gray/5 pointer-events-none" size={80} />
+        <div className="valo-card !p-8 md:!p-12 relative overflow-hidden bg-[#0c121a]/95 border-2 border-brand-red/40 hover:border-brand-red/80 transition-all duration-500 shadow-[0_0_30px_rgba(255,70,85,0.15)] hover:shadow-[0_0_50px_rgba(255,70,85,0.3)]">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-red/10 blur-[60px] rounded-full pointer-events-none" />
+          <Quote className="absolute top-6 left-6 text-brand-red/10 pointer-events-none drop-shadow-[0_0_10px_rgba(255,70,85,0.5)]" size={80} />
           
           <div className="relative z-10 w-full text-left">
              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-brand-red/5 border border-brand-red/20">
-                  <Brain size={24} className="text-brand-red" />
+                <div className="p-2 bg-brand-red/10 border border-brand-red/40 shadow-[0_0_15px_rgba(255,70,85,0.4)]">
+                  <Brain size={24} className="text-brand-red drop-shadow-[0_0_5px_rgba(255,70,85,0.8)]" />
                 </div>
-                <h3 className="text-2xl font-heading uppercase tracking-widest text-brand-light">Diagnóstico do Sensei</h3>
+                <h3 className="text-3xl md:text-4xl font-heading uppercase tracking-widest text-brand-light drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">Diagnóstico do Sensei</h3>
              </div>
              
              <p className="text-base font-sans font-medium leading-relaxed text-white mb-8 opacity-90 border-l-2 border-brand-red pl-5">

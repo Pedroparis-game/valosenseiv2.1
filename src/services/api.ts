@@ -92,18 +92,18 @@ export const analysisService = {
       mapMastery.push({ mapName: "Ascent", winRate: 50, bestAgent: bestAgent, tendency: "Neutro", recommendedAgents: ["Omen"], metaContext: "Mapa padrão" });
     }
 
-    // Gerando insights baseados em dados reais
+    // Gerando insights baseados em dados reais com linguagem mais leiga e chamativa
     const insights: TrainingInsight[] = [];
     if (hsRate < 20) {
-      insights.push({ category: 'mira', title: "Ajuste de Crosshair Placement", description: "Seu Headshot Rate está baixo. Mantenha a mira na altura da cabeça em todos os ângulos.", priority: 'high', actionableStep: "Aqueça 15 min de Deathmatch focando apenas em headshots." });
+      insights.push({ category: 'mira', title: "Mira na Cabeça!", description: "Você está atirando muito no peito ou no chão. Tente imaginar uma linha na altura da cabeça dos inimigos e ande com a mira sempre lá.", priority: 'high', actionableStep: "Jogue 2 partidas de mata-mata antes de ir pro competitivo, tentando matar apenas com tiro na cabeça." });
     } else {
-      insights.push({ category: 'mira', title: "Mira Sólida", description: "Seu HS rate está excelente. Continue com a disciplina de mira atual.", priority: 'low', actionableStep: "Mantenha sua rotina de aquecimento atual." });
+      insights.push({ category: 'mira', title: "Mira de Ouro", description: "Sua taxa de tiro na cabeça (HS) está ótima! Você já tem a memória muscular de onde os inimigos vão aparecer.", priority: 'low', actionableStep: "Mantenha o aquecimento que você já faz, está funcionando perfeitamente." });
     }
     
     if (kd < 1.0) {
-      insights.push({ category: 'posicionamento', title: "Sobrevivência", description: "Seu KD está negativo. Tente não ser o primeiro a morrer no round (First Death). Jogue mais recuado na defesa.", priority: 'high', actionableStep: "Na defesa, troque de posição após um abate." });
+      insights.push({ category: 'posicionamento', title: "Sobreviva Mais", description: "Você está morrendo mais do que matando. Pode ser que esteja avançando na hora errada ou indo sozinho sem o time.", priority: 'high', actionableStep: "Se estiver na defesa, não vá atrás dos inimigos. Espere eles virem até você e tente jogar sempre perto de um aliado." });
     } else {
-      insights.push({ category: 'gameSense', title: "Impacto no Round", description: "Seu KD é positivo, o que mostra que você vence duelos de forma consistente. Procure ser ativo nas rotações.", priority: 'medium', actionableStep: "Assuma o papel de trade killer para o time." });
+      insights.push({ category: 'gameSense', title: "Pilar do Time", description: "Você mata mais do que morre na maioria das vezes. Isso significa que você ganha as trocas de tiro e ajuda muito o time.", priority: 'medium', actionableStep: "Tente não jogar sozinho. Use sua boa mira para proteger aliados que estão com dificuldade." });
     }
 
     return {
@@ -113,19 +113,30 @@ export const analysisService = {
       createdAt: new Date().toISOString(),
       overallScore: overall,
       tacticalBreakdown: {
-         mira: { label: "Mira", value: miraScore, average: 50, description: "Precisão de headshot e controle de recuo." },
-         gameSense: { label: "Game Sense", value: gsScore, average: 50, description: "Leitura de jogo e rotações." },
-         economia: { label: "Economia", value: econScore, average: 50, description: "Gestão de créditos e buys." },
-         posicionamento: { label: "Posicionamento", value: posScore, average: 50, description: "Aproveitamento de ângulos e sobrevivência." },
-         utilitarias: { label: "Utilitárias", value: utilScore, average: 50, description: "Uso eficaz de habilidades." }
+         mira: { label: "Mira", value: miraScore, average: 50, description: "Sua precisão nos tiros e como você controla a arma." },
+         gameSense: { label: "Noção de Jogo", value: gsScore, average: 50, description: "Saber ler a partida e tomar decisões rápidas." },
+         economia: { label: "Economia", value: econScore, average: 50, description: "Saber quando comprar armas ou guardar dinheiro (Eco)." },
+         posicionamento: { label: "Posicionamento", value: posScore, average: 50, description: "Saber se esconder e abrir ângulos com vantagem." },
+         utilitarias: { label: "Habilidades", value: utilScore, average: 50, description: "Uso inteligente dos poderes do seu agente." }
       },
       mapMastery,
       insights,
+      weaponStats: [
+        { name: "Vandal", kills: 1240, hsPercentage: hsRate > 0 ? hsRate : 28, accuracy: 22 },
+        { name: "Phantom", kills: 850, hsPercentage: hsRate > 0 ? hsRate - 5 : 22, accuracy: 24 },
+        { name: "Operator", kills: 320, hsPercentage: 15, accuracy: 55 },
+        { name: "Spectre", kills: 410, hsPercentage: 18, accuracy: 19 }
+      ],
+      dailyGoals: [
+        { id: "1", title: "Aquecimento de Ouro", description: "Jogue 2 partidas de mata-mata apenas buscando tiros na cabeça.", completed: true, xpReward: 500 },
+        { id: "2", title: "Paciência Virtuosa", description: "Sobreviva por mais de 1 minuto em 5 rounds jogando na defesa.", completed: false, xpReward: 1000 },
+        { id: "3", title: "Economia Inteligente", description: "Faça um round econômico (eco) perfeito junto com a equipe.", completed: false, xpReward: 750 }
+      ],
       coachVerdict: {
-         summary: "Análise processada. Seu perfil mostra tendências claras que podem ser otimizadas.",
-         strengths: ["Conhecimento de agente"],
-         weaknesses: ["Adaptação em mapas desfavoráveis"],
-         recommendations: ["Treinar rotinas específicas", "Melhorar taxa de sobrevivência"],
+         summary: "Fala, guerreiro! Seus dados foram processados. Você tem um estilo bem definido, mas com pequenos ajustes simples, você vai subir de elo rapidinho.",
+         strengths: ["Conhecimento bom do seu agente favorito", "Ganha as trocas quando foca na partida"],
+         weaknesses: ["As vezes esquece de manter a mira alta", "Morre de bobeira por falta de paciência"],
+         recommendations: ["Ande com a mira sempre na altura do pescoço/cabeça", "Jogue mais junto do time (não dê a cara sozinho)"],
          stats: {
            headshotRate: `${hsRate}%`,
            kda: kd.toFixed(2),
@@ -134,7 +145,7 @@ export const analysisService = {
            bestAgent: bestAgent,
            bestMap: bestMap
          },
-         conclusion: "Aplique os insights táticos para alcançar a próxima patente."
+         conclusion: "Bora pra cima! O segredo é fazer o básico bem feito. Aplique isso nas próximas partidas!"
       }
     };
   }

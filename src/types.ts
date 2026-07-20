@@ -54,6 +54,21 @@ export interface TacticalMetric {
   description: string;
 }
 
+export interface WeaponStat {
+  name: string;
+  kills: number;
+  hsPercentage: number;
+  accuracy: number; // e.g. 25 for 25%
+}
+
+export interface DailyGoal {
+  id: string;
+  title: string;
+  description: string;
+  completed: boolean;
+  xpReward: number;
+}
+
 export interface AnalysisResult {
   id: string;
   userId: string;
@@ -68,6 +83,8 @@ export interface AnalysisResult {
   };
   mapMastery: MapPerformance[];
   insights: TrainingInsight[];
+  weaponStats?: WeaponStat[];
+  dailyGoals?: DailyGoal[];
   coachVerdict: {
     summary: string;
     strengths: string[];

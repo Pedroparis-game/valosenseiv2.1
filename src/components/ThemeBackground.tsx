@@ -17,17 +17,7 @@ export const ThemeBackground = () => {
 
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-[#0a0f16]">
-      {/* Dynamic Cursor Glow */}
-      <motion.div 
-        className="absolute w-[600px] h-[600px] bg-brand-red/10 rounded-full blur-[100px] mix-blend-screen"
-        animate={{
-          x: mousePos.x - 300,
-          y: mousePos.y - 300,
-        }}
-        transition={{ type: "tween", ease: "circOut", duration: 0.8 }}
-      />
-
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f16]/80 via-transparent to-[#0a0f16] z-10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f16]/60 via-transparent to-[#0a0f16]/90 z-10" />
 
       {/* Video Background */}
       <video
@@ -35,7 +25,7 @@ export const ThemeBackground = () => {
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-luminosity filter blur-[2px]"
+        className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-luminosity filter blur-[1px]"
         src="https://assets.contentstack.io/v3/assets/bltb6530b271fddd0b1/blt29d7c4f6bc077e9e/5eb26f54402b8b4d13a56656/agent-background-generic.mp4"
       />
       
@@ -53,13 +43,13 @@ export const ThemeBackground = () => {
       
       {/* Animated Floating Particles */}
       <div className="absolute inset-0 z-10">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(30)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute bg-brand-red/40 rounded-full blur-[1px]"
+            className="absolute bg-brand-red/60 rounded-full blur-[1px] mix-blend-screen shadow-[0_0_10px_rgba(255,70,85,0.8)]"
             style={{
-              width: Math.random() * 4 + 1 + "px",
-              height: Math.random() * 4 + 1 + "px",
+              width: Math.random() * 5 + 1 + "px",
+              height: Math.random() * 5 + 1 + "px",
               top: Math.random() * 100 + "%",
               left: Math.random() * 100 + "%",
             }}
@@ -78,11 +68,36 @@ export const ThemeBackground = () => {
         ))}
       </div>
 
-      {/* Large background text */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center overflow-hidden mix-blend-overlay opacity-[0.03] z-10">
-        <h1 className="text-[25vw] font-heading font-bold text-white whitespace-nowrap tracking-tighter leading-none select-none">
-          VALOSENSEI
-        </h1>
+      {/* Large background text with subtle flowing illumination */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex items-center justify-center z-10 pointer-events-none">
+        {/* Breathing Glow directly behind the text */}
+        <motion.div 
+          className="absolute w-[40vw] h-[15vw] bg-brand-red/10 blur-[120px] rounded-full mix-blend-screen" 
+          animate={{ 
+            opacity: [0.1, 0.4, 0.1],
+            scale: [0.9, 1.1, 0.9]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <div className="flex text-[14vw] md:text-[16vw] font-heading font-bold text-brand-red whitespace-nowrap tracking-tight leading-none select-none relative z-10">
+          <motion.div
+            animate={{ 
+              opacity: [0.03, 0.15, 0.03],
+              textShadow: [
+                "0 0 0px rgba(255,70,85,0)", 
+                "0 0 40px rgba(255,70,85,0.4)", 
+                "0 0 0px rgba(255,70,85,0)"
+              ]
+            }}
+            transition={{ 
+              duration: 8, 
+              repeat: Infinity, 
+              ease: "easeInOut",
+            }}
+          >
+            VALOSENSEI
+          </motion.div>
+        </div>
       </div>
     </div>
   );

@@ -94,7 +94,6 @@ export default function Insights({ analysis, stats }: InsightsProps) {
         
         <div className="valo-card !p-8 md:!p-12 relative overflow-hidden bg-[#0c121a]/95 border-2 border-brand-red/40 hover:border-brand-red/80 transition-all duration-500 shadow-[0_0_30px_rgba(255,70,85,0.15)] hover:shadow-[0_0_50px_rgba(255,70,85,0.3)]">
           <div className="absolute top-0 right-0 w-64 h-64 bg-brand-red/10 blur-[60px] rounded-full pointer-events-none" />
-          <Quote className="absolute top-6 left-6 text-brand-red/10 pointer-events-none drop-shadow-[0_0_10px_rgba(255,70,85,0.5)]" size={80} />
           
           <div className="relative z-10 w-full text-left">
              <div className="flex items-center gap-3 mb-6">
@@ -157,7 +156,7 @@ export default function Insights({ analysis, stats }: InsightsProps) {
              </div>
 
              <div className="text-center pt-6 border-t border-brand-gray/10">
-                 <p className="text-lg font-heading tracking-widest text-brand-light/80 italic">"{analysis?.coachVerdict?.conclusion || ""}"</p>
+                 <p className="text-lg font-heading tracking-widest text-brand-light/80 italic">{analysis?.coachVerdict?.conclusion || ""}</p>
              </div>
           </div>
         </div>
@@ -230,7 +229,7 @@ export default function Insights({ analysis, stats }: InsightsProps) {
                 <h4 className="font-heading text-xl uppercase tracking-widest text-brand-light">Mindset Pro</h4>
               </div>
               <p className="text-sm font-sans text-brand-light/90 leading-relaxed font-medium italic">
-                "{quote}"
+                {quote}
               </p>
             </div>
             

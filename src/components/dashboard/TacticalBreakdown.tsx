@@ -75,7 +75,7 @@ export default function TacticalBreakdown({ data }: Props) {
 
               <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-2">
                 <p className="text-xs font-sans text-brand-light/70 leading-relaxed font-medium flex-grow">
-                  "{metric.description}"
+                  {metric.description}
                 </p>
                 <div className="text-[9px] font-sans font-bold uppercase px-2 py-1 bg-brand-gray/10 border border-brand-gray/20 whitespace-nowrap shrink-0 text-brand-gray">
                   Rank Avg: <span className="opacity-60">{metric.average}%</span>

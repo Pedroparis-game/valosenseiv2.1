@@ -19,8 +19,8 @@ export default function PerformanceRadar({ analysis }: Props) {
     { subject: 'Mira'.toUpperCase(), value: analysis?.tacticalBreakdown?.mira?.value || 0, fullMark: 100, desc: "Precisão e consistência de tiros na cabeça." },
     { subject: 'Noção'.toUpperCase(), value: analysis?.tacticalBreakdown?.gameSense?.value || 0, fullMark: 100, desc: "Leitura de jogo, rotações e tomadas de decisão." },
     { subject: 'Eco'.toUpperCase(), value: analysis?.tacticalBreakdown?.economia?.value || 0, fullMark: 100, desc: "Gestão de créditos e compras inteligentes." },
-    { subject: 'Posicion.'.toUpperCase(), value: analysis?.tacticalBreakdown?.posicionamento?.value || 0, fullMark: 100, desc: "Escolha de ângulos e segurança nos duelos." },
-    { subject: 'Utilities'.toUpperCase(), value: analysis?.tacticalBreakdown?.utilitarias?.value || 0, fullMark: 100, desc: "Eficácia no uso de habilidades e ultimates." },
+    { subject: 'Posição'.toUpperCase(), value: analysis?.tacticalBreakdown?.posicionamento?.value || 0, fullMark: 100, desc: "Escolha de ângulos e segurança nos duelos." },
+    { subject: 'Util.'.toUpperCase(), value: analysis?.tacticalBreakdown?.utilitarias?.value || 0, fullMark: 100, desc: "Eficácia no uso de habilidades e ultimates." },
   ];
 
   const CustomTooltip = ({ active, payload }: any) => {
@@ -46,7 +46,7 @@ export default function PerformanceRadar({ analysis }: Props) {
     >
       <div className="w-full h-[380px] relative drop-shadow-[0_0_25px_rgba(255,70,85,0.15)]">
         <ResponsiveContainer width="100%" height="100%" minWidth={100} minHeight={100}>
-          <RadarChart cx="50%" cy="50%" outerRadius="75%" data={data}>
+          <RadarChart cx="50%" cy="50%" outerRadius="60%" data={data}>
             <PolarGrid stroke="#ff465540" strokeWidth={1} />
             <PolarAngleAxis 
               dataKey="subject" 

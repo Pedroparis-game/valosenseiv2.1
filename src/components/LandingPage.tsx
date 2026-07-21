@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import { Search } from "lucide-react";
+import logoSvg from "../assets/logo.svg";
 
 interface LandingPageProps {
   riotId: string;
@@ -34,7 +35,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="w-full max-w-[550px] flex items-center justify-center mb-8 relative">
             <div className="absolute inset-0 bg-brand-red/5 blur-[100px] rounded-full" />
             <img 
-              src="/logo.svg" 
+              src={logoSvg} 
               alt="ValoSensei Cover" 
               className="w-full h-auto object-contain drop-shadow-[0_0_35px_rgba(255,70,85,0.4)] relative z-10" 
             />

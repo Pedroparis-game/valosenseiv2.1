@@ -34,7 +34,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="w-full max-w-[250px] md:max-w-[300px] flex items-center justify-center mb-8 relative">
             <div className="absolute inset-0 bg-brand-red/10 blur-[60px] rounded-full" />
             <img 
-              src="/logo-sensei.svg?v=4" 
+              src="/logo-sensei.svg?v=6" 
               alt="ValoSensei Logo" 
               className="w-full h-auto object-contain drop-shadow-[0_0_25px_rgba(255,70,85,0.6)] relative z-10" 
             />

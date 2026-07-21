@@ -31,12 +31,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           transition={{ delay: 0.3, duration: 0.6 }}
           className="flex flex-col items-center justify-center mb-16"
         >
-          <div className="w-full max-w-[800px] flex items-center justify-center mb-16 relative">
-            <div className="absolute inset-0 bg-brand-red/5 blur-[100px] rounded-full" />
+          <div className="w-full max-w-[250px] md:max-w-[300px] flex items-center justify-center mb-8 relative">
+            <div className="absolute inset-0 bg-brand-red/10 blur-[60px] rounded-full" />
             <img 
-              src="/logo.svg?v=3" 
-              alt="ValoSensei Cover" 
-              className="w-full h-auto object-contain drop-shadow-[0_0_35px_rgba(255,70,85,0.4)] relative z-10 scale-125 -translate-y-6" 
+              src="/logo-sensei.svg?v=4" 
+              alt="ValoSensei Logo" 
+              className="w-full h-auto object-contain drop-shadow-[0_0_25px_rgba(255,70,85,0.6)] relative z-10" 
             />
           </div>
           <motion.div 

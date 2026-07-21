@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { motion } from "motion/react";
 
 export const ThemeBackground = () => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: e.clientX,
-        y: e.clientY,
-      });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+  const particles = useMemo(() => {
+    return [...Array(30)].map((_, i) => ({
+      id: i,
+      width: Math.random() * 5 + 1 + "px",
+      height: Math.random() * 5 + 1 + "px",
+      top: Math.random() * 100 + "%",
+      left: Math.random() * 100 + "%",
+      yTarget: Math.random() * -100 - 50,
+      xTarget: (Math.random() - 0.5) * 50,
+      duration: Math.random() * 5 + 5,
+      delay: Math.random() * 5,
+    }));
   }, []);
 
   return (
@@ -43,26 +44,26 @@ export const ThemeBackground = () => {
       
       {/* Animated Floating Particles */}
       <div className="absolute inset-0 z-10">
-        {[...Array(30)].map((_, i) => (
+        {particles.map((p) => (
           <motion.div
-            key={i}
+            key={p.id}
             className="absolute bg-brand-red/60 rounded-full blur-[1px] mix-blend-screen shadow-[0_0_10px_rgba(255,70,85,0.8)]"
             style={{
-              width: Math.random() * 5 + 1 + "px",
-              height: Math.random() * 5 + 1 + "px",
-              top: Math.random() * 100 + "%",
-              left: Math.random() * 100 + "%",
+              width: p.width,
+              height: p.height,
+              top: p.top,
+              left: p.left,
             }}
             animate={{
-              y: [0, Math.random() * -100 - 50],
-              x: [0, (Math.random() - 0.5) * 50],
+              y: [0, p.yTarget],
+              x: [0, p.xTarget],
               opacity: [0, 0.8, 0],
             }}
             transition={{
-              duration: Math.random() * 5 + 5,
+              duration: p.duration,
               repeat: Infinity,
               ease: "linear",
-              delay: Math.random() * 5,
+              delay: p.delay,
             }}
           />
         ))}

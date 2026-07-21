@@ -1,7 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
 import { Search } from "lucide-react";
-import logoSvg from "../assets/logo.svg";
 
 interface LandingPageProps {
   riotId: string;
@@ -23,7 +22,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-xl mx-auto text-center py-12 md:py-20"
+      className="max-w-3xl mx-auto text-center py-12 md:py-20"
     >
       <div className="mb-10 inline-block w-full">
         <motion.div 
@@ -32,19 +31,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           transition={{ delay: 0.3, duration: 0.6 }}
           className="flex flex-col items-center justify-center mb-16"
         >
-          <div className="w-full max-w-[550px] flex items-center justify-center mb-8 relative">
+          <div className="w-full max-w-[800px] flex items-center justify-center mb-16 relative">
             <div className="absolute inset-0 bg-brand-red/5 blur-[100px] rounded-full" />
             <img 
-              src={logoSvg} 
+              src="/logo.svg?v=3" 
               alt="ValoSensei Cover" 
-              className="w-full h-auto object-contain drop-shadow-[0_0_35px_rgba(255,70,85,0.4)] relative z-10" 
+              className="w-full h-auto object-contain drop-shadow-[0_0_35px_rgba(255,70,85,0.4)] relative z-10 scale-125 -translate-y-6" 
             />
           </div>
           <motion.div 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.6 }}
-            className="flex flex-col items-center gap-3"
+            className="flex flex-col items-center gap-3 mt-4"
           >
             <div className="h-[1px] w-32 bg-gradient-to-r from-transparent via-brand-red/50 to-transparent mb-2" />
             <p className="text-sm md:text-base font-sans font-bold text-brand-light/80 tracking-[0.4em] uppercase text-center drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] px-4">

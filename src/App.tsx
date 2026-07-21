@@ -18,7 +18,6 @@ export default function App() {
   const [stats, setStats] = useState<PlayerStats | null>(null);
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState("");
-  const [logoError, setLogoError] = useState(false);
 
   const handleSearch = useCallback(async (e?: FormEvent, isRefresh = false) => {
     if (e) e.preventDefault();

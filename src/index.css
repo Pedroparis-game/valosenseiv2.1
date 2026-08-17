@@ -6,20 +6,19 @@
   --font-body: 'Manrope', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   
-  /* Tactical Palette */
-  --color-hud-base: #0B1015; /* Deep Slate - Main Background */
-  --color-hud-surface: #151B22; /* Carbon - Elevated Background (Cards) */
-  --color-hud-surface-hover: #1E2630; /* Interactive Surface */
+  /* Tactical Palette - Master V2 */
+  --color-hud-base: #0F1113; /* Void Black - Main Background */
+  --color-hud-surface: #1B1E22; /* Graphite - Elevated Background (Cards) */
+  --color-hud-surface-hover: #22262B; /* Interactive Surface */
   --color-hud-border: #2A3441; /* Borders and subtle dividers */
   
   --color-text-main: #ECE8E1; /* Radianite White - High contrast body */
   --color-text-muted: #8B97A3; /* Gunmetal - Secondary text / Labels */
   
-  --color-accent-crimson: #FF4655; /* Alert / Loss / Warning Accent */
-  --color-accent-cyan: #00DFD8; /* Tactical Cyan - Main highlight / Utility / Win */
+  --color-accent-primary: #FF4655; /* Valorant Red - Sole accent for CTAs, wins, interactions */
   
   --color-brand-red: #FF4655; /* Legacy fallback */
-  --color-brand-dark: #151B22; /* Legacy fallback */
+  --color-brand-dark: #1B1E22; /* Legacy fallback */
   --color-brand-light: #ECE8E1; /* Legacy fallback */
   --color-brand-gray: #8B97A3; /* Legacy fallback */
 }
@@ -38,7 +37,45 @@
   
   /* Accessible focus rings */
   *:focus-visible {
-    @apply outline-none ring-2 ring-accent-cyan ring-offset-2 ring-offset-hud-base;
+    @apply outline-none ring-2 ring-accent-primary ring-offset-2 ring-offset-hud-base;
+  }
+
+  @keyframes float-blob {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+    33% { transform: translate(3vw, -5vh) scale(1.1); opacity: 0.4; }
+    66% { transform: translate(-2vw, 4vh) scale(0.9); opacity: 0.7; }
+    100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+  }
+
+  /* Antigravity-style animated organic glow */
+  .bg-glow-blob {
+    position: fixed;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, rgba(255,70,85,0.06) 0%, rgba(255,70,85,0) 60%);
+    top: -10vw;
+    left: -10vw;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(80px);
+    animation: float-blob 22s ease-in-out infinite alternate;
+    will-change: transform, opacity;
+  }
+
+  .bg-glow-blob-2 {
+    position: fixed;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, rgba(255,70,85,0.04) 0%, rgba(255,70,85,0) 60%);
+    bottom: -15vw;
+    right: -5vw;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(80px);
+    animation: float-blob 28s ease-in-out infinite alternate-reverse;
+    will-change: transform, opacity;
   }
 }
 
@@ -66,47 +103,36 @@
   }
 
   /* Tactical Card Design */
-  .tactical-card {
-    @apply bg-hud-surface border border-hud-border relative overflow-hidden transition-colors duration-300;
+  .tactical-card, .valo-card {
+    @apply bg-hud-surface border border-hud-border relative overflow-hidden transition-all duration-300;
     clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
   }
-  .tactical-card::after {
-    content: '';
-    @apply absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-hud-border to-transparent opacity-50;
+  .valo-card {
+    @apply p-6;
   }
-  .tactical-card:hover {
-    @apply border-accent-cyan/40 bg-hud-surface-hover;
+  .tactical-card::after, .valo-card::after {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-hud-border to-transparent opacity-50;
+  }
+  .tactical-card:hover, .valo-card:hover {
+    @apply border-accent-primary/40 shadow-[0_0_20px_rgba(255,70,85,0.15)];
+    transform: scale(1.02);
   }
 
   /* Tactical Button Design */
-  .tactical-btn {
-    @apply relative px-6 py-3 font-display text-lg uppercase tracking-widest text-text-main bg-hud-surface border border-hud-border transition-all duration-300 flex items-center justify-center gap-2;
+  .tactical-btn, .valo-btn {
+    @apply relative px-6 py-3 font-display text-lg uppercase tracking-widest text-text-main bg-hud-surface border border-hud-border transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer;
     clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
   }
-  .tactical-btn:hover {
-    @apply bg-accent-cyan/10 border-accent-cyan text-accent-cyan shadow-[0_0_15px_rgba(0,223,216,0.15)];
+  .tactical-btn:hover, .valo-btn:hover {
+    @apply border-accent-primary text-accent-primary shadow-[0_0_15px_rgba(255,70,85,0.2)];
+    background: radial-gradient(circle at center, rgba(255,70,85,0.15) 0%, rgba(21,27,34,1) 100%);
   }
   .tactical-btn-primary {
-    @apply bg-accent-cyan text-hud-base font-bold border-transparent hover:bg-accent-cyan/90 hover:text-hud-base hover:shadow-[0_0_20px_rgba(0,223,216,0.3)];
-  }
-
-  /* Legacy buttons mapping */
-  .valo-btn {
-    @apply relative px-6 py-3 font-display text-lg uppercase tracking-widest text-text-main bg-hud-surface border border-hud-border transition-all duration-300 flex items-center justify-center gap-2;
-    clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
-  }
-  .valo-btn:hover {
-    @apply bg-accent-cyan/10 border-accent-cyan text-accent-cyan shadow-[0_0_15px_rgba(0,223,216,0.15)];
-  }
-  .valo-card {
-    @apply bg-hud-surface border border-hud-border relative overflow-hidden transition-colors duration-300 p-6;
-    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
-  }
-  .valo-card:hover {
-    @apply border-accent-cyan/40 bg-hud-surface-hover;
+    @apply bg-accent-primary text-hud-base font-bold border-transparent hover:bg-accent-primary/90 hover:text-hud-base hover:shadow-[0_0_20px_rgba(255,70,85,0.4)];
   }
   .valo-input {
-    @apply bg-hud-base text-text-main border border-hud-border p-3 font-body focus:outline-none focus:border-accent-cyan transition-colors w-full;
+    @apply bg-hud-base text-text-main border border-hud-border p-3 font-body focus:outline-none focus:border-accent-primary transition-colors w-full;
     clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
   }
 
@@ -121,6 +147,6 @@
     background: var(--color-hud-border);
   }
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: var(--color-accent-cyan);
+    background: var(--color-accent-primary);
   }
 }

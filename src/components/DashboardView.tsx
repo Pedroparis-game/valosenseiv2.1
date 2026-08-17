@@ -10,7 +10,7 @@ import WeaponStats from "./dashboard/WeaponStats";
 import { MapPerformanceGrid } from "./dashboard/MapPerformanceGrid";
 import { MapDetailModal } from "./dashboard/MapDetailModal";
 import { mockMapPerformanceData } from "../data/mockMapPerformance";
-import { InsightsChartsSection } from "./dashboard/charts/InsightsChartsSection";
+import InsightsChartsSection from "./charts/InsightsChartsSection";
 
 interface DashboardViewProps {
   stats: PlayerStats;

@@ -58,6 +58,26 @@ export interface MapDashboardStats {
   kdRatio: number;
 }
 
+export interface MatchRecord {
+  matchId: string;
+  playedAt: string; // ISO date
+  map: string;
+  agent: string;
+  result: "win" | "loss" | "draw";
+  kills: number;
+  deaths: number;
+  assists: number;
+  rankBefore: number;
+  rankAfter: number;
+  side: "attack" | "defense";
+}
+
+export interface AgentRadarData {
+  attribute: string;
+  valueAgent1: number;
+  valueAgent2?: number;
+}
+
 export interface MapDashboardData {
   mapId: string;
   mapName: string;

@@ -4,12 +4,16 @@ import { MapCard } from "./MapCard";
 
 interface MapPerformanceGridProps {
   maps: MapDashboardData[];
+  onClick?: (mapId: string) => void;
 }
 
-export const MapPerformanceGrid: React.FC<MapPerformanceGridProps> = ({ maps }) => {
+export const MapPerformanceGrid: React.FC<MapPerformanceGridProps> = ({ maps, onClick }) => {
   const handleMapClick = (mapId: string) => {
-    // Stubbed out functionality for expanding the card or opening a modal
-    console.log(`[Valorant Analytics] Expanding tactical view for map ID: ${mapId}`);
+    if (onClick) {
+      onClick(mapId);
+    } else {
+      console.log(`[Valorant Analytics] Expanding tactical view for map ID: ${mapId}`);
+    }
   };
 
   if (!maps || maps.length === 0) {

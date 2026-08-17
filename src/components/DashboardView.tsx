@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import { motion } from "motion/react";
-import { RefreshCcw, Brain, Target, ArrowLeft, BookOpen, BarChart3 } from "lucide-react";
-import { PlayerStats, AnalysisResult } from "../types";
+import { motion, AnimatePresence } from "motion/react";
+import { RefreshCcw, Brain, Target, ArrowLeft, BookOpen, BarChart3, Map } from "lucide-react";
+import { PlayerStats, AnalysisResult, MatchRecord, MapDashboardData } from "../types";
 import StatsOverview from "./dashboard/StatsOverview";
 import Insights from "./dashboard/Insights";
 import TacticalLibrary from "./dashboard/TacticalLibrary";
 import MatchHistory from "./dashboard/MatchHistory";
 import WeaponStats from "./dashboard/WeaponStats";
+import { MapPerformanceGrid } from "./dashboard/MapPerformanceGrid";
+import { MapDetailModal } from "./dashboard/MapDetailModal";
+import { mockMapPerformanceData } from "../data/mockMapPerformance";
+import { InsightsChartsSection } from "./dashboard/charts/InsightsChartsSection";
 
 interface DashboardViewProps {
   stats: PlayerStats;
@@ -23,7 +27,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   handleRefresh,
   handleNewSearch
 }) => {
-  const [activeTab, setActiveTab] = useState<'training' | 'library'>('training');
+  const [activeTab, setActiveTab] = useState<'training' | 'library' | 'maps' | 'charts'>('training');
+  const [selectedMapId, setSelectedMapId] = useState<string | null>(null);
 
   const container = {
     hidden: { opacity: 0 },
@@ -37,6 +42,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 100, damping: 20 } }
   };
+
+  const selectedMapData = selectedMapId 
+    ? mockMapPerformanceData.find(m => m.mapId === selectedMapId) 
+    : null;
+
+  // Map API MatchData to our new MatchRecord for charts
+  const matchRecords: MatchRecord[] = stats.recentMatches.map(m => {
+    const [k, d, a] = m.kda.split("/").map(Number);
+    return {
+      matchId: m.id,
+      playedAt: m.timestamp,
+      map: m.map,
+      agent: m.agent,
+      result: m.outcome === "Victory" ? "win" : "loss",
+      kills: k || 0,
+      deaths: d || 0,
+      assists: a || 0,
+      rankBefore: stats.rr || 50,
+      rankAfter: (stats.rr || 50) + (m.outcome === "Victory" ? 15 : -15), // Mocking variation
+      side: "attack"
+    };
+  });
 
   return (
     <motion.div 
@@ -76,10 +103,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </motion.div>
 
       {/* VIEW TABS SELECTOR */}
-      <motion.div variants={item} className="flex gap-2 border-b border-brand-gray/10 pb-6 mb-8">
+      <motion.div variants={item} className="flex flex-wrap gap-2 border-b border-brand-gray/10 pb-6 mb-8">
         <button
           onClick={() => setActiveTab('training')}
-          className={`flex-1 md:flex-initial flex items-center justify-center gap-3 px-6 py-3 font-heading text-xl md:text-2xl uppercase tracking-widest border transition-all ${
+          className={`flex-1 md:flex-initial flex items-center justify-center gap-3 px-4 md:px-6 py-3 font-heading text-sm md:text-xl uppercase tracking-widest border transition-all ${
             activeTab === 'training'
               ? 'bg-brand-red text-white border-brand-red shadow-[0_0_15px_rgba(255,70,85,0.25)]'
               : 'bg-[#0f141c] text-brand-gray border-brand-gray/15 hover:text-brand-light hover:border-brand-gray/30'
@@ -87,11 +114,38 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)' }}
         >
           <BarChart3 size={18} />
-          Painel de Treino
+          Geral
         </button>
+        
+        <button
+          onClick={() => setActiveTab('charts')}
+          className={`flex-1 md:flex-initial flex items-center justify-center gap-3 px-4 md:px-6 py-3 font-heading text-sm md:text-xl uppercase tracking-widest border transition-all ${
+            activeTab === 'charts'
+              ? 'bg-brand-red text-white border-brand-red shadow-[0_0_15px_rgba(255,70,85,0.25)]'
+              : 'bg-[#0f141c] text-brand-gray border-brand-gray/15 hover:text-brand-light hover:border-brand-gray/30'
+          }`}
+          style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)' }}
+        >
+          <Target size={18} />
+          Evolução
+        </button>
+
+        <button
+          onClick={() => setActiveTab('maps')}
+          className={`flex-1 md:flex-initial flex items-center justify-center gap-3 px-4 md:px-6 py-3 font-heading text-sm md:text-xl uppercase tracking-widest border transition-all ${
+            activeTab === 'maps'
+              ? 'bg-brand-red text-white border-brand-red shadow-[0_0_15px_rgba(255,70,85,0.25)]'
+              : 'bg-[#0f141c] text-brand-gray border-brand-gray/15 hover:text-brand-light hover:border-brand-gray/30'
+          }`}
+          style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)' }}
+        >
+          <Map size={18} />
+          Mapas
+        </button>
+
         <button
           onClick={() => setActiveTab('library')}
-          className={`flex-1 md:flex-initial flex items-center justify-center gap-3 px-6 py-3 font-heading text-xl md:text-2xl uppercase tracking-widest border transition-all ${
+          className={`flex-1 md:flex-initial flex items-center justify-center gap-3 px-4 md:px-6 py-3 font-heading text-sm md:text-xl uppercase tracking-widest border transition-all ${
             activeTab === 'library'
               ? 'bg-brand-red text-white border-brand-red shadow-[0_0_15px_rgba(255,70,85,0.25)]'
               : 'bg-[#0f141c] text-brand-gray border-brand-gray/15 hover:text-brand-light hover:border-brand-gray/30'
@@ -99,13 +153,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)' }}
         >
           <BookOpen size={18} />
-          Biblioteca Tática
+          Biblioteca
         </button>
       </motion.div>
 
       {/* CORE VIEWPORT */}
       <div className="space-y-12">
-        {activeTab === 'training' ? (
+        {activeTab === 'training' && (
           <>
             <StatsOverview stats={stats} />
             
@@ -139,10 +193,33 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </motion.div>
             )}
           </>
-        ) : (
+        )}
+
+        {activeTab === 'charts' && (
+           <InsightsChartsSection matches={matchRecords} />
+        )}
+
+        {activeTab === 'maps' && (
+           <MapPerformanceGrid 
+             maps={mockMapPerformanceData} 
+             onClick={(id) => setSelectedMapId(id)} 
+           />
+        )}
+
+        {activeTab === 'library' && (
           <TacticalLibrary />
         )}
       </div>
+
+      {/* MODAL LAYER */}
+      <AnimatePresence>
+        {selectedMapId && selectedMapData && (
+          <MapDetailModal 
+            mapData={selectedMapData} 
+            onClose={() => setSelectedMapId(null)} 
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

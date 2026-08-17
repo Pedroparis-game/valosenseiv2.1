@@ -47,6 +47,28 @@ export interface MapPerformance {
   metaContext: string;
 }
 
+export interface MapAgentStats {
+  name: string;
+  iconUrl: string;
+}
+
+export interface MapDashboardStats {
+  winRate: number;
+  acs: number;
+  kdRatio: number;
+}
+
+export interface MapDashboardData {
+  mapId: string;
+  mapName: string;
+  images: {
+    splash: string;
+    radar: string;
+  };
+  stats: MapDashboardStats;
+  topAgents: MapAgentStats[];
+}
+
 export interface TacticalMetric {
   label: string;
   value: number;

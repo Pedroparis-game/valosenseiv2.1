@@ -12,11 +12,14 @@ fill="#FF4655" stroke="none">
 
     <style>
       @keyframes blink {
-        0%, 96%, 98% { opacity: 1; }
-        97% { opacity: 0.1; }
+        0%, 92%, 98% { opacity: 1; }
+        93%, 97% { opacity: 0; }
+        94% { opacity: 0.8; transform: translateX(5px); }
+        95% { opacity: 0.2; transform: translateX(-5px); }
+        96% { opacity: 1; transform: translateX(0); }
       }
       .eyes {
-        animation: blink 4s infinite;
+        animation: blink 3s infinite;
         fill: #FF4655;
         filter: drop-shadow(0 0 15px rgba(255, 70, 85, 0.8));
       }

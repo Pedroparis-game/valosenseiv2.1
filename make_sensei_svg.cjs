@@ -36,15 +36,17 @@ if (match) {
     let headPath = headSegments.map(seg => seg[0] + seg.slice(1).join(' ')).join(' ');
     let eyesPath = eyesSegments.map(seg => seg[0] + seg.slice(1).join(' ')).join(' ');
     
-    // Replace the single path with two paths and CSS
     const css = `
     <style>
       @keyframes blink {
-        0%, 96%, 98% { opacity: 1; }
-        97% { opacity: 0.1; }
+        0%, 92%, 98% { opacity: 1; }
+        93%, 97% { opacity: 0; }
+        94% { opacity: 0.8; transform: translateX(5px); }
+        95% { opacity: 0.2; transform: translateX(-5px); }
+        96% { opacity: 1; transform: translateX(0); }
       }
       .eyes {
-        animation: blink 4s infinite;
+        animation: blink 3s infinite;
         fill: #FF4655;
         filter: drop-shadow(0 0 15px rgba(255, 70, 85, 0.8));
       }
@@ -54,10 +56,6 @@ if (match) {
     </style>
     `;
     
-    let newSvg = svg.replace(/<path d="[^"]+"[^>]*\/>/, `${css}<path class="head" d="${headPath}"/><path class="eyes" d="${eyesPath}"/>`);
-    
-    // Wait, the original had `<path d="..." ...>` inside a `<g>` with fill="#FF4655" and stroke="none".
-    // I need to make sure the replacement works. Let's just find the `d="..."` and replace the whole <path> element.
     let pathElemMatch = svg.match(/<path[^>]+d="[^"]+"[^>]*\/>/);
     if (!pathElemMatch) {
        pathElemMatch = svg.match(/<path d="[^"]+"\/>/); // fallback

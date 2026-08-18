@@ -30,11 +30,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, filter: 'blur(10px)', scale: 1.05 }}
       transition={{ duration: 0.5 }}
-      className="relative min-h-[calc(100vh-120px)] flex flex-col justify-center overflow-hidden -mt-10"
+      className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden pt-24 pb-8"
     >
       <LandingBackground />
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 w-full flex flex-col items-center justify-center pt-10 pb-12">
+      <div className="relative z-10 max-w-4xl mx-auto px-6 w-full flex flex-col items-center justify-center pt-2 pb-6">
         <AnimatedLogo />
         
         <RiotIdForm 

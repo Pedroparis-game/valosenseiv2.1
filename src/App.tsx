@@ -65,7 +65,7 @@ export default function App() {
   }, [riotId]);
 
   return (
-    <div className="min-h-screen relative overflow-x-hidden pt-10 pb-20 selection:bg-accent-primary selection:text-white">
+    <div className="min-h-screen relative overflow-x-hidden selection:bg-accent-primary selection:text-white">
       <div className="bg-glow-blob" />
       <div className="bg-glow-blob-2" />
       
@@ -101,8 +101,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-
-      <main className="container mx-auto px-4 relative z-10 pt-16">
+      <main className="container mx-auto px-4 relative z-10 flex-1 flex flex-col justify-center min-h-screen">
         <AnimatePresence mode="wait">
           {!stats ? (
             <LandingPage 
@@ -126,8 +125,8 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      <footer className="mt-32 py-10 border-t border-hud-border/20 text-center">
-        <p className="text-xs font-sans tracking-[0.3em] opacity-40 uppercase text-text-main">
+      <footer className="absolute bottom-4 left-0 w-full text-center opacity-50">
+        <p className="text-[10px] font-sans tracking-[0.3em] uppercase text-text-main">
           Designed for Radiance <span className="text-accent-primary mx-2">●</span> Defy the Limits
         </p>
       </footer>

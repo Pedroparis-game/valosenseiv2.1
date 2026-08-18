@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import HeroSummary from '../components/dashboard/HeroSummary';
-import StatCard from '../components/dashboard/StatCard';
+import { StatCard } from '../components/ui/StatCard';
 import AgentPortraitCard from '../components/dashboard/AgentPortraitCard';
 import InsightsGrid from '../components/dashboard/InsightsGrid';
 import { MatchRecord } from '../types';
@@ -72,10 +72,10 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 w-full">
             {/* Quick Stats */}
             <div className="col-span-1 md:col-span-8 grid grid-cols-2 md:grid-cols-2 gap-6">
-              <StatCard label="Winrate" value={58.4} decimals={1} suffix="%" trend={2.4} icon={<Trophy size={20} />} />
-              <StatCard label="K/D Ratio" value={1.32} decimals={2} trend={-0.05} icon={<Skull size={20} />} />
-              <StatCard label="Dano Médio / Round" value={164} trend={12} icon={<Crosshair size={20} />} />
-              <StatCard label="Progresso de RR" value={145} prefix="+" trend={45} icon={<TrendingUp size={20} />} />
+              <StatCard label="Winrate" value={58.4} decimals={1} suffix="%" trend="up" icon={<Trophy size={20} />} />
+              <StatCard label="K/D Ratio" value={1.32} decimals={2} trend="down" icon={<Skull size={20} />} />
+              <StatCard label="Dano Médio / Round" value={164} trend="up" icon={<Crosshair size={20} />} />
+              <StatCard label="Progresso de RR" value={145} trend="up" icon={<TrendingUp size={20} />} />
             </div>
 
             {/* Top Agent Portrait */}

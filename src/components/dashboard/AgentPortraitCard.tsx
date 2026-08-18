@@ -1,6 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
-import CountUp from '../ui/CountUp';
+import { AnimatedCounter } from '../ui/animations/AnimatedCounter';
 
 interface Props {
   agentName: string;
@@ -12,13 +11,12 @@ interface Props {
 
 export default function AgentPortraitCard({ agentName, role, winrate, kda, matchesPlayed }: Props) {
   // Generate a stylized fallback silhouette based on agent name if we don't have official assets
-  const seed = agentName.length;
 
   return (
     <div className="tactical-card group overflow-hidden h-full flex flex-col relative">
       {/* Background Stylized Graphic */}
       <div className="absolute inset-0 bg-hud-surface opacity-50 z-0" />
-      <div className="absolute -right-12 -top-12 w-48 h-48 bg-hud-border/10 rounded-full blur-2xl group-hover:bg-accent-primary/10 transition-colors duration-500 z-0" />
+      <div className="absolute -right-12 -top-12 w-48 h-48 bg-accent-secondary/10 rounded-full blur-[40px] group-hover:bg-accent-primary/20 transition-colors duration-500 z-0" />
       
       {/* Fake Silhouette representation to avoid copyright */}
       <div className="absolute bottom-0 right-0 w-3/4 h-3/4 opacity-10 group-hover:opacity-20 transition-opacity duration-300 pointer-events-none z-0 overflow-hidden flex items-end justify-end">
@@ -44,13 +42,13 @@ export default function AgentPortraitCard({ agentName, role, winrate, kda, match
           <div>
             <div className="text-[10px] font-mono font-bold uppercase text-text-muted tracking-widest mb-1">Winrate</div>
             <div className="text-2xl font-display tracking-widest text-text-main">
-              <CountUp value={winrate} decimals={1} suffix="%" />
+              <AnimatedCounter value={winrate} decimals={1} suffix="%" />
             </div>
           </div>
           <div>
             <div className="text-[10px] font-mono font-bold uppercase text-text-muted tracking-widest mb-1">KDA</div>
             <div className="text-2xl font-display tracking-widest text-text-main">
-              <CountUp value={kda} decimals={2} />
+              <AnimatedCounter value={kda} decimals={2} />
             </div>
           </div>
         </div>

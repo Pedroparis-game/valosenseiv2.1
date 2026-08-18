@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { MatchRecord } from '../../types';
-import PerformanceTrendChart from './charts/PerformanceTrendChart';
-import AgentRadarChart from './charts/AgentRadarChart';
-import RankProgressionChart from './charts/RankProgressionChart';
-import MapWinrateBar from './charts/MapWinrateBar';
+import PerformanceTrendChart from '../charts/PerformanceTrendChart';
+import AgentRadarChart from '../charts/AgentRadarChart';
+import RankProgressionChart from '../charts/RankProgressionChart';
+import MapWinrateBar from '../charts/MapWinrateBar';
 
 interface Props {
   matches: MatchRecord[];
@@ -22,7 +22,7 @@ const container = {
 
 const item = {
   hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } }
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } as any }
 };
 
 export default function InsightsGrid({ matches, radarData, primaryAgent }: Props) {

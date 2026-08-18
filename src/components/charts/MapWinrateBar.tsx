@@ -103,7 +103,9 @@ export default function MapWinrateBar({ matches }: Props) {
             <Bar 
               dataKey="winrate" 
               isAnimationActive={true}
-              animationDuration={800}
+              animationDuration={1000}
+              animationEasing="ease-out"
+              radius={[0, 4, 4, 0]}
             >
               {chartData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={getColor(entry.winrate)} />

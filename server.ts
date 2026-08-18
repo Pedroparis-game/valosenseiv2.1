@@ -21,7 +21,7 @@ if (geminiKey) geminiKey = geminiKey.replace(/^["']|["']$/g, "").trim();
 const ai = new GoogleGenAI({ apiKey: geminiKey });
 
   // HENRIK DEV API ENGINE (Unofficial but powerful)
-  app.get("/api/player/:name/:tag", async (req, res) => {
+  app.get("/api/player/:name/:tag", async (res) => {
     const { name, tag } = req.params;
     let apiKey = process.env.HENRIK_API_KEY;
   if (apiKey) apiKey = apiKey.replace(/^["']|["']$/g, "").trim();
@@ -134,7 +134,7 @@ const ai = new GoogleGenAI({ apiKey: geminiKey });
     }
   });
 
-  app.post("/api/chat", async (req, res) => {
+  app.post("/api/chat", async (res) => {
     try {
       const { message, history } = req.body;
       const model = "gemini-2.5-flash";
@@ -165,7 +165,7 @@ Responda sempre em Português do Brasil.`;
     }
   });
 
-  app.post("/api/analyze", async (req, res) => {
+  app.post("/api/analyze", async (res) => {
     try {
       const { playerData } = req.body;
       const prompt = `
@@ -281,7 +281,7 @@ Recomende os melhores agentes (recommendedAgents) e o seu melhor agente (bestAge
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
-    app.get("*", (req, res) => {
+    app.get("*", (res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
   }

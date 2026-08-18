@@ -6,21 +6,24 @@
   --font-body: 'Manrope', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   
-  /* Tactical Palette - Master V2 */
-  --color-hud-base: #0F1113; /* Void Black - Main Background */
-  --color-hud-surface: #1B1E22; /* Graphite - Elevated Background (Cards) */
-  --color-hud-surface-hover: #22262B; /* Interactive Surface */
-  --color-hud-border: #2A3441; /* Borders and subtle dividers */
+  /* Vibrant Tactical Palette */
+  --color-hud-base: #0F1113; /* Void Black */
+  --color-hud-surface: #1B1E22; /* Graphite */
+  --color-hud-surface-hover: #22262B; 
+  --color-hud-border: #2A3441; 
   
-  --color-text-main: #ECE8E1; /* Radianite White - High contrast body */
-  --color-text-muted: #8B97A3; /* Gunmetal - Secondary text / Labels */
+  --color-text-main: #ECE8E1; 
+  --color-text-muted: #8B97A3; 
   
-  --color-accent-primary: #FF4655; /* Valorant Red - Sole accent for CTAs, wins, interactions */
+  --color-accent-primary: #FF4655; /* Valorant Red */
+  --color-accent-secondary: #00E5FF; /* Electric Cyan */
+  --color-accent-success: #39FF88; /* Neon Green */
+  --color-accent-gold: #FFD700; /* Gold */
   
-  --color-brand-red: #FF4655; /* Legacy fallback */
-  --color-brand-dark: #1B1E22; /* Legacy fallback */
-  --color-brand-light: #ECE8E1; /* Legacy fallback */
-  --color-brand-gray: #8B97A3; /* Legacy fallback */
+  --color-brand-red: #FF4655; 
+  --color-brand-dark: #1B1E22; 
+  --color-brand-light: #ECE8E1; 
+  --color-brand-gray: #8B97A3; 
 }
 
 @layer base {
@@ -45,6 +48,19 @@
     33% { transform: translate(3vw, -5vh) scale(1.1); opacity: 0.4; }
     66% { transform: translate(-2vw, 4vh) scale(0.9); opacity: 0.7; }
     100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+  }
+  
+  @keyframes shine {
+    100% { transform: translateX(150%) skewX(-20deg); }
+  }
+  
+  @keyframes glitch-anim {
+    0% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 2px); }
+    20% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
+    40% { clip-path: inset(50% 0 30% 0); transform: translate(-2px, 0); }
+    60% { clip-path: inset(0 0 100% 0); transform: translate(2px, 2px); }
+    80% { clip-path: inset(20% 0 50% 0); transform: translate(-2px, -2px); }
+    100% { clip-path: inset(0 0 0 0); transform: translate(0); }
   }
 
   /* Antigravity-style animated organic glow */
@@ -115,8 +131,8 @@
     @apply absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-hud-border to-transparent opacity-50;
   }
   .tactical-card:hover, .valo-card:hover {
-    @apply border-accent-primary/40 shadow-[0_0_20px_rgba(255,70,85,0.15)];
-    transform: scale(1.02);
+    @apply border-accent-secondary/60 shadow-[0_0_30px_rgba(0,229,255,0.25)];
+    transform: scale(1.02) translateY(-2px);
   }
 
   /* Tactical Button Design */
@@ -149,4 +165,8 @@
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: var(--color-accent-primary);
   }
+}
+.mask-image-radial {
+  mask-image: radial-gradient(circle, black 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle, black 60%, transparent 100%);
 }

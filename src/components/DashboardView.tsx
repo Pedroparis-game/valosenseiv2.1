@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { RefreshCcw, Brain, Target, ArrowLeft, BookOpen, BarChart3, Map } from "lucide-react";
-import { PlayerStats, AnalysisResult, MatchRecord, MapDashboardData } from "../types";
+import { RefreshCcw, Target, ArrowLeft, BookOpen, BarChart3, Map } from "lucide-react";
+import { PlayerStats, AnalysisResult, MatchRecord } from "../types";
 import StatsOverview from "./dashboard/StatsOverview";
 import Insights from "./dashboard/Insights";
 import TacticalLibrary from "./dashboard/TacticalLibrary";
@@ -11,6 +11,10 @@ import { MapPerformanceGrid } from "./dashboard/MapPerformanceGrid";
 import { MapDetailModal } from "./dashboard/MapDetailModal";
 import { mockMapPerformanceData } from "../data/mockMapPerformance";
 import InsightsChartsSection from "./charts/InsightsChartsSection";
+
+import { Button } from "./ui/Button";
+import { TabBar } from "./ui/TabBar";
+import { LoadingIndicator } from "./ui/animations/LoadingIndicator";
 
 interface DashboardViewProps {
   stats: PlayerStats;
@@ -76,7 +80,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       <motion.div variants={item} className="flex flex-col md:flex-row justify-between items-center md:items-end mb-8 gap-6 border-b border-hud-border pb-8">
          <div className="text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-              <span className="text-xs font-mono font-bold uppercase tracking-[0.2em] bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20 px-3 py-1 clip-chamfer-sm">Telemetria de Agente</span>
+              <span className="text-xs font-mono font-bold uppercase tracking-[0.2em] bg-accent-primary/10 text-accent-primary border border-accent-primary/20 px-3 py-1 clip-chamfer-sm">Telemetria de Agente</span>
             </div>
             <h2 className="text-5xl md:text-7xl font-display uppercase leading-none flex flex-wrap items-baseline justify-center md:justify-start gap-2 tracking-wider">
                <span className="text-text-main">{stats.name}</span>
@@ -84,78 +88,52 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </h2>
          </div>
          <div className="flex gap-4 w-full md:w-auto">
-            <button 
+            <Button 
               onClick={handleRefresh}
-              disabled={loading}
-              className="tactical-btn w-1/2 md:w-auto disabled:opacity-50"
+              loading={loading}
+              variant="primary"
+              className="w-1/2 md:w-auto"
+              icon={<RefreshCcw size={18} />}
             >
-              <RefreshCcw size={18} className={loading ? "animate-spin" : ""} />
               Atualizar
-            </button>
-            <button 
+            </Button>
+            <Button 
               onClick={handleNewSearch}
-              className="tactical-btn w-1/2 md:w-auto"
+              variant="secondary"
+              className="w-1/2 md:w-auto"
+              icon={<ArrowLeft size={18} />}
             >
-              <ArrowLeft size={18} />
               Voltar
-            </button>
+            </Button>
          </div>
       </motion.div>
 
       {/* VIEW TABS SELECTOR */}
-      <motion.div variants={item} className="flex flex-wrap gap-2 border-b border-hud-border pb-6 mb-8">
-        <button
-          onClick={() => setActiveTab('training')}
-          className={`flex-1 md:flex-initial flex items-center justify-center gap-3 px-4 md:px-6 py-3 font-display text-sm md:text-lg uppercase tracking-widest border transition-all clip-chamfer-sm ${
-            activeTab === 'training'
-              ? 'bg-accent-cyan/10 text-accent-cyan border-accent-cyan shadow-[0_0_15px_rgba(0,223,216,0.15)]'
-              : 'bg-hud-surface text-text-muted border-hud-border hover:text-text-main hover:border-text-muted'
-          }`}
-        >
-          <BarChart3 size={18} />
-          Geral
-        </button>
-        
-        <button
-          onClick={() => setActiveTab('charts')}
-          className={`flex-1 md:flex-initial flex items-center justify-center gap-3 px-4 md:px-6 py-3 font-display text-sm md:text-lg uppercase tracking-widest border transition-all clip-chamfer-sm ${
-            activeTab === 'charts'
-              ? 'bg-accent-cyan/10 text-accent-cyan border-accent-cyan shadow-[0_0_15px_rgba(0,223,216,0.15)]'
-              : 'bg-hud-surface text-text-muted border-hud-border hover:text-text-main hover:border-text-muted'
-          }`}
-        >
-          <Target size={18} />
-          Evolução
-        </button>
-
-        <button
-          onClick={() => setActiveTab('maps')}
-          className={`flex-1 md:flex-initial flex items-center justify-center gap-3 px-4 md:px-6 py-3 font-display text-sm md:text-lg uppercase tracking-widest border transition-all clip-chamfer-sm ${
-            activeTab === 'maps'
-              ? 'bg-accent-cyan/10 text-accent-cyan border-accent-cyan shadow-[0_0_15px_rgba(0,223,216,0.15)]'
-              : 'bg-hud-surface text-text-muted border-hud-border hover:text-text-main hover:border-text-muted'
-          }`}
-        >
-          <Map size={18} />
-          Mapas
-        </button>
-
-        <button
-          onClick={() => setActiveTab('library')}
-          className={`flex-1 md:flex-initial flex items-center justify-center gap-3 px-4 md:px-6 py-3 font-display text-sm md:text-lg uppercase tracking-widest border transition-all clip-chamfer-sm ${
-            activeTab === 'library'
-              ? 'bg-accent-cyan/10 text-accent-cyan border-accent-cyan shadow-[0_0_15px_rgba(0,223,216,0.15)]'
-              : 'bg-hud-surface text-text-muted border-hud-border hover:text-text-main hover:border-text-muted'
-          }`}
-        >
-          <BookOpen size={18} />
-          Biblioteca
-        </button>
+      <motion.div variants={item}>
+        <TabBar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          tabs={[
+            { id: 'training', label: 'Geral', icon: <BarChart3 size={18} /> },
+            { id: 'charts', label: 'Evolução', icon: <Target size={18} /> },
+            { id: 'maps', label: 'Mapas', icon: <Map size={18} /> },
+            { id: 'library', label: 'Biblioteca', icon: <BookOpen size={18} /> },
+          ]}
+        />
       </motion.div>
 
       {/* CORE VIEWPORT */}
-      <div className="space-y-12">
-        {activeTab === 'training' && (
+      <div className="space-y-12 relative overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, x: -20, filter: "blur(4px)" }}
+            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, x: 20, filter: "blur(4px)" }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="w-full"
+          >
+            {activeTab === 'training' && (
           <>
             <StatsOverview stats={stats} />
             
@@ -171,21 +149,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
               </>
             ) : (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="tactical-card flex flex-col items-center justify-center py-32 gap-6 relative"
-              >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-accent-cyan/5 blur-[50px] rounded-full" />
-                <div className="relative">
-                  <Brain size={64} className="text-accent-cyan opacity-50 animate-pulse" />
-                  <Target size={24} className="absolute -top-2 -right-2 text-text-main animate-bounce" />
-                </div>
-                <div className="text-center relative z-10">
-                  <div className="font-display uppercase text-3xl tracking-widest mb-2 text-text-main">Sincronizando Telemetria...</div>
-                  <p className="text-sm font-mono font-bold uppercase tracking-[0.2em] text-text-muted">Estabelecendo conexão com o servidor tático</p>
-                </div>
-              </motion.div>
+              <div className="tactical-card py-32">
+                <LoadingIndicator />
+              </div>
             )}
           </>
         )}
@@ -204,6 +170,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         {activeTab === 'library' && (
           <TacticalLibrary />
         )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* MODAL LAYER */}

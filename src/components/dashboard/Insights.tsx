@@ -1,10 +1,11 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Zap, Map, CheckCircle2, ShieldAlert, Quote, Target, TrendingUp, AlertTriangle, Brain, Activity, User, Award, Crosshair } from "lucide-react";
+import { Zap, CheckCircle2, ShieldAlert, Target, TrendingUp, AlertTriangle, Brain, Activity, User, Award, Crosshair } from "lucide-react";
 import { AnalysisResult, PlayerStats } from "../../types";
 import TacticalBreakdown from "./TacticalBreakdown";
 import MapMastery from "./MapMastery";
 import PerformanceRadar from "./PerformanceRadar";
+import { VictoryCelebration } from "../ui/animations/VictoryCelebration";
 
 interface InsightsProps {
   analysis: AnalysisResult;
@@ -25,6 +26,19 @@ import { AnimatePresence } from "motion/react";
 import { Flame } from "lucide-react";
 import { getOfficialRankIcon } from "../../utils/rankUtils";
 export default function Insights({ analysis, stats }: InsightsProps) {
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [celebrationType, setCelebrationType] = useState<'victory' | 'rank_up' | 'high_kda'>('victory');
+
+  useEffect(() => {
+    if (stats.overallWinRate >= 60) {
+      setCelebrationType('victory');
+      setShowCelebration(true);
+    } else if (stats.overallKd && stats.overallKd >= 1.5) {
+      setCelebrationType('high_kda');
+      setShowCelebration(true);
+    }
+  }, [stats]);
+
   const MINDSET_QUOTES = [
     "A diferença entre o bom e o melhor é a consistência.",
     "Mire na cabeça, mas jogue com a mente.",
@@ -46,7 +60,6 @@ export default function Insights({ analysis, stats }: InsightsProps) {
   React.useEffect(() => {
     if (stats.rankImageUrl) {
       setRankIconUrl(stats.rankImageUrl);
-      return;
     }
     const loadIcon = async () => {
       const url = await getOfficialRankIcon(stats.rank);
@@ -55,31 +68,38 @@ export default function Insights({ analysis, stats }: InsightsProps) {
     loadIcon();
   }, [stats.rank, stats.rankImageUrl]);
   const prioritizedInsights = useMemo(() => {
-    return [...(analysis?.insights || [])].sort((a, b) => {
-      const priorityOrder = { high: 0, medium: 1, low: 2 };
-      return (priorityOrder[a.priority as keyof typeof priorityOrder] || 0) - (priorityOrder[b.priority as keyof typeof priorityOrder] || 0);
-    });
-  }, [(analysis?.insights || [])]);
+  if (!analysis || !analysis.insights) return [];
+  return [...analysis.insights].sort((a, b) => {
+    const priorityOrder = { high: 0, medium: 1, low: 2 };
+    return (priorityOrder[a.priority as keyof typeof priorityOrder] || 1) - (priorityOrder[b.priority as keyof typeof priorityOrder] || 1);
+  });
+}, [analysis?.insights]);
 
-  const getPriorityColor = (priority: string) => {
-    if (priority === 'high') return 'bg-brand-red text-white border-brand-red';
-    return 'bg-brand-dark text-brand-red border-brand-gray/30';
-  };
+const getPriorityColor = (priority: string) => {
+  if (priority === 'high') return 'text-accent-primary';
+  if (priority === 'medium') return 'text-amber-500';
+  return 'text-text-muted';
+};
 
-  // Determine a Grade (S, A+, A, B+, etc.) based on Impact Score
+// Determine a Grade (S, A+, A, B+, etc.) based on Impact Score
   const score = analysis?.overallScore || 0;
   let grade = "C";
-  let gradeColor = "text-brand-gray";
+  let gradeColor = "text-text-muted";
   if (score >= 90) { grade = "S"; gradeColor = "text-[#00ffaa] drop-shadow-[0_0_15px_rgba(0,255,170,0.5)]"; }
-  else if (score >= 80) { grade = "A+"; gradeColor = "text-brand-light drop-shadow-[0_0_15px_rgba(236,232,225,0.5)]"; }
-  else if (score >= 70) { grade = "A"; gradeColor = "text-brand-light"; }
+  else if (score >= 80) { grade = "A+"; gradeColor = "text-text-main drop-shadow-[0_0_15px_rgba(236,232,225,0.5)]"; }
+  else if (score >= 70) { grade = "A"; gradeColor = "text-text-main"; }
   else if (score >= 60) { grade = "B+"; gradeColor = "text-amber-400"; }
   else if (score >= 50) { grade = "B"; gradeColor = "text-amber-400"; }
 
   const nextFocus = prioritizedInsights[0]?.category || "mira";
 
-  return (
+    return (
     <div className="space-y-24 py-12 pb-32">
+      <VictoryCelebration 
+        show={showCelebration} 
+        type={celebrationType} 
+        onComplete={() => setShowCelebration(false)} 
+      />
       {/* SEÇÃO 1: VEREDITO DO SENSEI */}
       <motion.section
         initial={{ opacity: 0, y: 30 }}
@@ -87,76 +107,76 @@ export default function Insights({ analysis, stats }: InsightsProps) {
         viewport={{ once: true }}
       >
         <div className="flex items-center gap-4 mb-4">
-          <Activity className="text-brand-red" size={24} />
-          <span className="text-[10px] font-sans font-bold uppercase tracking-[0.4em] text-brand-gray">Relatório de Inteligência Tática</span>
-          <div className="flex-grow h-[1px] bg-brand-gray/20" />
+          <Activity className="text-accent-primary" size={24} />
+          <span className="text-[10px] font-sans font-bold uppercase tracking-[0.4em] text-text-muted">Relatório de Inteligência Tática</span>
+          <div className="flex-grow h-[1px] bg-hud-border/20" />
         </div>
         
-        <div className="valo-card !p-8 md:!p-12 relative overflow-hidden bg-[#0c121a]/95 border-2 border-brand-red/40 hover:border-brand-red/80 transition-all duration-500 shadow-[0_0_30px_rgba(255,70,85,0.15)] hover:shadow-[0_0_50px_rgba(255,70,85,0.3)]">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-red/10 blur-[60px] rounded-full pointer-events-none" />
+        <div className="valo-card !p-8 md:!p-12 relative overflow-hidden bg-[#0c121a]/95 border-2 border-accent-primary/40 hover:border-accent-primary/80 transition-all duration-500 shadow-[0_0_30px_rgba(255,70,85,0.15)] hover:shadow-[0_0_50px_rgba(255,70,85,0.3)]">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-accent-primary/10 blur-[60px] rounded-full pointer-events-none" />
           
           <div className="relative z-10 w-full text-left">
              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-brand-red/10 border border-brand-red/40 shadow-[0_0_15px_rgba(255,70,85,0.4)]">
-                  <Brain size={24} className="text-brand-red drop-shadow-[0_0_5px_rgba(255,70,85,0.8)]" />
+                <div className="p-2 bg-accent-primary/10 border border-accent-primary/40 shadow-[0_0_15px_rgba(255,70,85,0.4)]">
+                  <Brain size={24} className="text-accent-primary drop-shadow-[0_0_5px_rgba(255,70,85,0.8)]" />
                 </div>
-                <h3 className="text-3xl md:text-4xl font-heading uppercase tracking-widest text-brand-light drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">Diagnóstico do Sensei</h3>
+                <h3 className="text-3xl md:text-4xl font-display uppercase tracking-widest text-text-main drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">Diagnóstico do Sensei</h3>
              </div>
              
-             <p className="text-base font-sans font-medium leading-relaxed text-white mb-8 opacity-90 border-l-2 border-brand-red pl-5">
+             <p className="text-base font-sans font-medium leading-relaxed text-white mb-8 opacity-90 border-l-2 border-accent-primary pl-5">
                {analysis?.coachVerdict?.summary || "Sem resumo disponível."}
              </p>
              
              {/* BLOCOS (Fortes, Melhorar, Dicas) */}
              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                <div className="bg-[#11161d]/50 border border-brand-gray/10 p-6 rounded-sm hover:border-[#00ffaa]/30 transition-colors">
+                <div className="bg-[#11161d]/50 border border-hud-border/10 p-6 rounded-sm hover:border-[#00ffaa]/30 transition-colors">
                    <div className="flex items-center gap-3 mb-4 border-b border-[#00ffaa]/10 pb-3">
                      <CheckCircle2 className="text-[#00ffaa]" size={18} />
-                     <h4 className="font-heading uppercase tracking-widest text-brand-light text-sm">Pontos Fortes</h4>
+                     <h4 className="font-display uppercase tracking-widest text-text-main text-sm">Pontos Fortes</h4>
                    </div>
                    <ul className="space-y-3">
                      {(analysis?.coachVerdict?.strengths || []).map((str, idx) => (
                        <li key={idx} className="flex items-start gap-2.5">
                          <span className="text-[#00ffaa] mt-1 text-[10px]">▶</span>
-                         <span className="text-xs font-sans text-brand-light/90 leading-relaxed">{str}</span>
+                         <span className="text-xs font-sans text-text-main/90 leading-relaxed">{str}</span>
                        </li>
                      ))}
                    </ul>
                 </div>
 
-                <div className="bg-[#11161d]/50 border border-brand-gray/10 p-6 rounded-sm hover:border-amber-400/30 transition-colors">
+                <div className="bg-[#11161d]/50 border border-hud-border/10 p-6 rounded-sm hover:border-amber-400/30 transition-colors">
                    <div className="flex items-center gap-3 mb-4 border-b border-amber-400/10 pb-3">
                      <AlertTriangle className="text-amber-400" size={18} />
-                     <h4 className="font-heading uppercase tracking-widest text-brand-light text-sm">Para Melhorar</h4>
+                     <h4 className="font-display uppercase tracking-widest text-text-main text-sm">Para Melhorar</h4>
                    </div>
                    <ul className="space-y-3">
                      {(analysis?.coachVerdict?.weaknesses || []).map((wk, idx) => (
                        <li key={idx} className="flex items-start gap-2.5">
                          <span className="text-amber-400 mt-1 text-[10px]">▶</span>
-                         <span className="text-xs font-sans text-brand-light/90 leading-relaxed">{wk}</span>
+                         <span className="text-xs font-sans text-text-main/90 leading-relaxed">{wk}</span>
                        </li>
                      ))}
                    </ul>
                 </div>
 
-                <div className="bg-[#11161d]/50 border border-brand-gray/10 p-6 rounded-sm hover:border-brand-red/30 transition-colors">
-                   <div className="flex items-center gap-3 mb-4 border-b border-brand-red/10 pb-3">
-                     <Brain className="text-brand-red" size={18} />
-                     <h4 className="font-heading uppercase tracking-widest text-brand-light text-sm">Recomendações</h4>
+                <div className="bg-[#11161d]/50 border border-hud-border/10 p-6 rounded-sm hover:border-accent-primary/30 transition-colors">
+                   <div className="flex items-center gap-3 mb-4 border-b border-accent-primary/10 pb-3">
+                     <Brain className="text-accent-primary" size={18} />
+                     <h4 className="font-display uppercase tracking-widest text-text-main text-sm">Recomendações</h4>
                    </div>
                    <ul className="space-y-3">
                      {(analysis?.coachVerdict?.recommendations || []).map((rec, idx) => (
                        <li key={idx} className="flex items-start gap-2.5">
-                         <span className="text-brand-red mt-1 text-[10px]">▶</span>
-                         <span className="text-xs font-sans text-brand-light/90 leading-relaxed">{rec}</span>
+                         <span className="text-accent-primary mt-1 text-[10px]">▶</span>
+                         <span className="text-xs font-sans text-text-main/90 leading-relaxed">{rec}</span>
                        </li>
                      ))}
                    </ul>
                 </div>
              </div>
 
-             <div className="text-center pt-6 border-t border-brand-gray/10">
-                 <p className="text-lg font-heading tracking-widest text-brand-light/80 italic">{analysis?.coachVerdict?.conclusion || ""}</p>
+             <div className="text-center pt-6 border-t border-hud-border/10">
+                 <p className="text-lg font-display tracking-widest text-text-main/80 italic">{analysis?.coachVerdict?.conclusion || ""}</p>
              </div>
           </div>
         </div>
@@ -169,31 +189,31 @@ export default function Insights({ analysis, stats }: InsightsProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
           <div className="lg:col-span-4 flex flex-col">
             {/* 1. Cabeçalho do Perfil & Classificação */}
-            <div className="valo-card !p-6 flex items-center justify-between border-l-2 border-brand-red bg-[#11161d] shadow-sm relative overflow-hidden group h-full">
+            <div className="valo-card !p-6 flex items-center justify-between border-l-2 border-accent-primary bg-[#11161d] shadow-sm relative overflow-hidden group h-full">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-brand-gray/30 p-1 bg-brand-dark relative group-hover:border-brand-red/50 transition-colors">
-                  <div className="absolute inset-0 bg-brand-red/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-hud-border/30 p-1 bg-hud-surface relative group-hover:border-accent-primary/50 transition-colors">
+                  <div className="absolute inset-0 bg-accent-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                   {rankIconUrl ? (
                     <img src={rankIconUrl} alt="Rank" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
                   ) : (
-                    <User className="w-full h-full p-2 text-brand-gray" />
+                    <User className="w-full h-full p-2 text-text-muted" />
                   )}
                 </div>
                 <div>
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-widest text-brand-gray">{stats.rank || "Unranked"}</div>
-                  <div className="font-heading text-2xl tracking-wider text-brand-light uppercase">{stats.name} <span className="text-brand-red/80 text-sm">#{stats.tag}</span></div>
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-widest text-text-muted">{stats.rank || "Unranked"}</div>
+                  <div className="font-display text-2xl tracking-wider text-text-main uppercase">{stats.name} <span className="text-accent-primary/80 text-sm">#{stats.tag}</span></div>
                 </div>
               </div>
               <div className="text-center pr-2">
-                <div className="text-[10px] font-sans font-bold uppercase tracking-[0.2em] text-brand-gray mb-1">Classificação</div>
-                <div className={`text-5xl font-heading ${gradeColor} drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]`}>{grade}</div>
+                <div className="text-[10px] font-sans font-bold uppercase tracking-[0.2em] text-text-muted mb-1">Classificação</div>
+                <div className={`text-5xl font-display ${gradeColor} drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]`}>{grade}</div>
               </div>
             </div>
           </div>
           
           <div className="lg:col-span-8 flex flex-col">
             {/* 5. Estatísticas Rápidas */}
-            <div className="valo-card !p-6 h-full flex flex-col justify-center bg-gradient-to-br from-brand-darker/90 to-[#0a0f16]">
+            <div className="valo-card !p-6 h-full flex flex-col justify-center bg-gradient-to-br from-hud-base/90 to-[#0a0f16]">
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 lg:gap-4">
                 {[
                   { label: "HS%", value: analysis.coachVerdict.stats?.headshotRate || "0%", icon: Crosshair },
@@ -204,11 +224,11 @@ export default function Insights({ analysis, stats }: InsightsProps) {
                   { label: "Partidas", value: stats.recentMatches.length || 0, icon: Target },
                 ].map((stat, i) => {
                   const IconCmp = stat.icon;
-                  return (
-                    <div key={i} className="bg-brand-dark/40 border border-brand-gray/10 p-4 flex flex-col items-center justify-center text-center hover:bg-brand-gray/5 hover:border-brand-red/30 transition-colors rounded-sm shadow-inner group">
-                       <IconCmp size={18} className="text-brand-gray mb-2 opacity-50 group-hover:text-brand-red group-hover:opacity-100 transition-colors" />
-                       <div className="text-xl font-heading tracking-wider text-brand-light mb-1">{stat.value}</div>
-                       <div className="text-[10px] uppercase font-bold tracking-widest text-brand-gray">{stat.label}</div>
+                    return (
+<div key={i} className="bg-hud-surface/40 border border-hud-border/10 p-4 flex flex-col items-center justify-center text-center hover:bg-hud-border/5 hover:border-accent-primary/30 transition-colors rounded-sm shadow-inner group">
+                       <IconCmp size={18} className="text-text-muted mb-2 opacity-50 group-hover:text-accent-primary group-hover:opacity-100 transition-colors" />
+                       <div className="text-xl font-display tracking-wider text-text-main mb-1">{stat.value}</div>
+                       <div className="text-[10px] uppercase font-bold tracking-widest text-text-muted">{stat.label}</div>
                     </div>
                   );
                 })}
@@ -222,22 +242,22 @@ export default function Insights({ analysis, stats }: InsightsProps) {
           
           {/* Coluna Esquerda: Estilo Tático + Insight */}
           <div className="lg:col-span-4 flex flex-col gap-6 lg:gap-8">
-            <div className="valo-card !p-6 relative overflow-hidden group hover:border-brand-light/30 transition-colors h-full flex flex-col justify-center">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-light/5 blur-[40px] rounded-full group-hover:bg-brand-light/10 transition-colors pointer-events-none" />
+            <div className="valo-card !p-6 relative overflow-hidden group hover:border-text-main/30 transition-colors h-full flex flex-col justify-center">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-text-main/5 blur-[40px] rounded-full group-hover:bg-text-main/10 transition-colors pointer-events-none" />
               <div className="flex items-start gap-3 mb-4">
                 <Flame size={22} className="text-[#00ffaa]" />
-                <h4 className="font-heading text-xl uppercase tracking-widest text-brand-light">Mindset Pro</h4>
+                <h4 className="font-display text-xl uppercase tracking-widest text-text-main">Mindset Pro</h4>
               </div>
-              <p className="text-sm font-sans text-brand-light/90 leading-relaxed font-medium italic">
+              <p className="text-sm font-sans text-text-main/90 leading-relaxed font-medium italic">
                 {quote}
               </p>
             </div>
             
-            <div className="valo-card !p-6 relative overflow-hidden border-l-4 border-l-brand-red bg-brand-dark/95 h-full flex flex-col justify-center group">
-              <div className="absolute top-0 right-0 w-40 h-40 bg-brand-red/5 blur-[50px] rounded-full group-hover:bg-brand-red/10 transition-colors pointer-events-none" />
+            <div className="valo-card !p-6 relative overflow-hidden border-l-4 border-l-accent-primary bg-hud-surface/95 h-full flex flex-col justify-center group">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-accent-primary/5 blur-[50px] rounded-full group-hover:bg-accent-primary/10 transition-colors pointer-events-none" />
               <div className="flex items-center gap-3 mb-4">
-                <Zap size={20} className="text-brand-red" />
-                <h4 className="font-heading text-sm uppercase tracking-[0.2em] text-brand-red">Principal Insight</h4>
+                <Zap size={20} className="text-accent-primary" />
+                <h4 className="font-display text-sm uppercase tracking-[0.2em] text-accent-primary">Principal Insight</h4>
               </div>
               <p className="text-sm font-sans text-white/90 leading-relaxed font-medium">
                 {prioritizedInsights[0]?.description || "Sem insights no momento. Jogue mais partidas."}
@@ -247,9 +267,9 @@ export default function Insights({ analysis, stats }: InsightsProps) {
 
           {/* Coluna Central: Radar (Destaque Maior) */}
           <div className="lg:col-span-4 flex flex-col">
-            <div className="valo-card relative overflow-hidden bg-brand-darker group hover:border-brand-red/40 transition-colors duration-500 shadow-[0_0_30px_rgba(0,0,0,0.5)] h-full flex flex-col justify-center py-10 min-h-[350px]">
-               <h4 className="absolute top-6 left-6 text-xs font-sans font-bold uppercase tracking-[0.4em] text-brand-gray z-10">Análise de Performance</h4>
-               <div className="absolute inset-0 bg-gradient-to-br from-brand-red/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+            <div className="valo-card relative overflow-hidden bg-hud-base group hover:border-accent-primary/40 transition-colors duration-500 shadow-[0_0_30px_rgba(0,0,0,0.5)] h-full flex flex-col justify-center py-10 min-h-[350px]">
+               <h4 className="absolute top-6 left-6 text-xs font-sans font-bold uppercase tracking-[0.4em] text-text-muted z-10">Análise de Performance</h4>
+               <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
                <PerformanceRadar analysis={analysis} />
             </div>
           </div>
@@ -257,20 +277,20 @@ export default function Insights({ analysis, stats }: InsightsProps) {
           {/* Coluna Direita: Evolução Tática + Medalhas */}
           <div className="lg:col-span-4 flex flex-col gap-6 lg:gap-8">
             <div className="valo-card !p-6 h-full flex flex-col justify-center group relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-bl from-brand-red/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-bl from-accent-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
               <div className="flex justify-between items-end mb-6 relative z-10">
                 <div>
-                  <h4 className="text-xs font-sans font-bold uppercase tracking-[0.2em] text-brand-gray mb-1">Evolução Tática</h4>
-                  <div className="text-brand-light font-heading uppercase text-3xl">Nível {analysis?.overallScore || 0}</div>
+                  <h4 className="text-xs font-sans font-bold uppercase tracking-[0.2em] text-text-muted mb-1">Evolução Tática</h4>
+                  <div className="text-text-main font-display uppercase text-3xl">Nível {analysis?.overallScore || 0}</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-widest text-brand-red mb-1">Próximo Foco</div>
-                  <div className="text-brand-light text-xs font-sans font-bold uppercase tracking-wider">{nextFocus}</div>
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-widest text-accent-primary mb-1">Próximo Foco</div>
+                  <div className="text-text-main text-xs font-sans font-bold uppercase tracking-wider">{nextFocus}</div>
                 </div>
               </div>
-              <div className="h-1.5 w-full bg-brand-darker border border-brand-gray/15 rounded-none overflow-hidden relative z-10">
+              <div className="h-1.5 w-full bg-hud-base border border-hud-border/15 rounded-none overflow-hidden relative z-10">
                 <motion.div 
-                  className="h-full bg-brand-red"
+                  className="h-full bg-accent-primary"
                   initial={{ width: 0 }}
                   whileInView={{ width: `${analysis?.overallScore || 0}%` }}
                   viewport={{ once: true }}
@@ -280,25 +300,25 @@ export default function Insights({ analysis, stats }: InsightsProps) {
             </div>
             
             <div className="flex flex-col gap-3 justify-center h-full">
-               <div className="w-full bg-brand-darker/60 border border-brand-gray/20 px-4 py-4 flex items-center gap-4 hover:bg-brand-gray/5 transition-colors cursor-default rounded-sm">
+               <div className="w-full bg-hud-base/60 border border-hud-border/20 px-4 py-4 flex items-center gap-4 hover:bg-hud-border/5 transition-colors cursor-default rounded-sm">
                  <div className="p-2 bg-[#00ffaa]/10 rounded-full">
                    <Award size={20} className="text-[#00ffaa]" />
                  </div>
-                 <span className="text-xs font-sans font-bold uppercase tracking-widest text-brand-light">Potencial de Subida Alto</span>
+                 <span className="text-xs font-sans font-bold uppercase tracking-widest text-text-main">Potencial de Subida Alto</span>
                </div>
-               <div className="w-full bg-brand-darker/60 border border-brand-gray/20 px-4 py-4 flex items-center gap-4 hover:bg-brand-gray/5 transition-colors cursor-default rounded-sm">
+               <div className="w-full bg-hud-base/60 border border-hud-border/20 px-4 py-4 flex items-center gap-4 hover:bg-hud-border/5 transition-colors cursor-default rounded-sm">
                  <div className="p-2 bg-amber-400/10 rounded-full">
                    <Crosshair size={20} className="text-amber-400" />
                  </div>
-                 <span className="text-xs font-sans font-bold uppercase tracking-widest text-brand-light">Foco Tático na Mira</span>
+                 <span className="text-xs font-sans font-bold uppercase tracking-widest text-text-main">Foco Tático na Mira</span>
                </div>
             </div>
           </div>
         </div>
 
         {/* ROW 3: COMPETÊNCIAS ESPECÍFICAS */}
-        <div className="valo-card relative overflow-hidden bg-gradient-to-b from-brand-dark/95 to-brand-darker/95 border-t-4 border-t-brand-red shadow-[0_0_40px_rgba(255,70,85,0.05)] !p-8">
-           <h4 className="text-xs font-sans font-bold uppercase tracking-[0.4em] mb-8 text-brand-gray border-b border-brand-gray/20 pb-4 w-full text-center">
+        <div className="valo-card relative overflow-hidden bg-gradient-to-b from-hud-surface/95 to-hud-base/95 border-t-4 border-t-accent-primary shadow-[0_0_40px_rgba(255,70,85,0.05)] !p-8">
+           <h4 className="text-xs font-sans font-bold uppercase tracking-[0.4em] mb-8 text-text-muted border-b border-hud-border/20 pb-4 w-full text-center">
              Análise Detalhada de Fundamentos
            </h4>
            <TacticalBreakdown data={analysis?.tacticalBreakdown || { mira: { label: "Mira", value: 0, average: 0, description: "" }, gameSense: { label: "Game Sense", value: 0, average: 0, description: "" }, economia: { label: "Economia", value: 0, average: 0, description: "" }, posicionamento: { label: "Posicionamento", value: 0, average: 0, description: "" }, utilitarias: { label: "Utilitárias", value: 0, average: 0, description: "" } }} />
@@ -312,19 +332,19 @@ export default function Insights({ analysis, stats }: InsightsProps) {
 
       {/* SEÇÃO 4: PLANO DE TREINO E VULNERABILIDADES */}
       <section className="space-y-8 mt-16 relative">
-        <div className="absolute -left-4 top-0 bottom-0 w-1 bg-brand-red/50" />
+        <div className="absolute -left-4 top-0 bottom-0 w-1 bg-accent-primary/50" />
         
-        <div className="flex items-end justify-between border-b border-brand-gray/20 pb-4">
+        <div className="flex items-end justify-between border-b border-hud-border/20 pb-4">
           <div>
-            <div className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-brand-red mb-1">Análise Crítica</div>
-            <h3 className="text-4xl font-heading uppercase tracking-widest text-brand-light flex items-center gap-3">
-              <AlertTriangle className="text-brand-red" size={32} />
+            <div className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-accent-primary mb-1">Análise Crítica</div>
+            <h3 className="text-4xl font-display uppercase tracking-widest text-text-main flex items-center gap-3">
+              <AlertTriangle className="text-accent-primary" size={32} />
               Protocolo de Otimização
             </h3>
           </div>
           <div className="hidden md:block text-right">
-             <div className="text-xs font-sans font-bold uppercase tracking-widest text-brand-gray">Itens Identificados</div>
-             <div className="text-2xl font-heading text-brand-light">{prioritizedInsights.length}</div>
+             <div className="text-xs font-sans font-bold uppercase tracking-widest text-text-muted">Itens Identificados</div>
+             <div className="text-2xl font-display text-text-main">{prioritizedInsights.length}</div>
           </div>
         </div>
         
@@ -334,10 +354,10 @@ export default function Insights({ analysis, stats }: InsightsProps) {
             const Icon = categoryIcons[insight.category] || Zap;
             
             // Determinar cores e severidade baseado na prioridade
-            let prioColor = "text-brand-red";
-            let prioBg = "bg-brand-red";
-            let prioBorder = "border-brand-red/30";
-            let prioGlow = "group-hover:border-brand-red";
+            let prioColor = "text-accent-primary";
+            let prioBg = "bg-accent-primary";
+            let prioBorder = "border-accent-primary/30";
+            let prioGlow = "group-hover:border-accent-primary";
             let severity = 85;
             let time = "5 Sessões";
             let difficulty = "Difícil";
@@ -374,8 +394,8 @@ export default function Insights({ analysis, stats }: InsightsProps) {
               "Monitorar resultados nas próximas partidas"
             ];
             
-            return (
-              <motion.div
+              return (
+<motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -386,66 +406,66 @@ export default function Insights({ analysis, stats }: InsightsProps) {
                 <div className={`valo-card h-full flex flex-col !p-0 overflow-hidden group transition-all duration-300 border-2 border-transparent ${prioGlow} bg-[#11161d]`}>
                   
                   {/* HEADER */}
-                  <div className="p-6 relative flex flex-col justify-between border-b border-brand-gray/10">
+                  <div className="p-6 relative flex flex-col justify-between border-b border-hud-border/10">
                     {/* Background Accent */}
                     <div className={`absolute top-0 right-0 w-64 h-64 ${prioBg}/5 blur-[60px] rounded-full group-hover:${prioBg}/10 transition-colors pointer-events-none`} />
                     <div className={`absolute top-0 left-0 w-1 h-full ${prioBg}`} />
                     
                     <div className="flex justify-between items-start relative z-10 mb-4">
                       <div className="flex items-center gap-4">
-                        <div className={`p-3 bg-brand-darker border ${prioBorder} rounded-sm shadow-inner`}>
+                        <div className={`p-3 bg-hud-base border ${prioBorder} rounded-sm shadow-inner`}>
                           <Icon size={24} className={prioColor} />
                         </div>
                         <div>
                           <div className={`font-sans font-bold uppercase text-[10px] tracking-[0.3em] ${prioColor} mb-1`}>
                             {insight.category}
                           </div>
-                          <h4 className={`font-heading uppercase tracking-wider text-brand-light ${isHero ? 'text-3xl' : 'text-xl'}`}>
+                          <h4 className={`font-display uppercase tracking-wider text-text-main ${isHero ? 'text-3xl' : 'text-xl'}`}>
                             {insight.title}
                           </h4>
                         </div>
                       </div>
-                      <div className={`px-3 py-1 font-sans font-bold text-[10px] uppercase border ${prioBorder} ${prioColor} bg-brand-darker`}>
+                      <div className={`px-3 py-1 font-sans font-bold text-[10px] uppercase border ${prioBorder} ${prioColor} bg-hud-base`}>
                         Severidade: {severity}
                       </div>
                     </div>
                   </div>
                   
                   {/* CONTENT */}
-                  <div className="p-6 flex-grow flex flex-col justify-between relative z-10 bg-brand-dark/20">
+                  <div className="p-6 flex-grow flex flex-col justify-between relative z-10 bg-hud-surface/20">
                     <div>
-                      <p className={`font-sans text-brand-light/70 leading-relaxed mb-8 ${isHero ? 'text-lg' : 'text-sm'}`}>
+                      <p className={`font-sans text-text-main/70 leading-relaxed mb-8 ${isHero ? 'text-lg' : 'text-sm'}`}>
                         {insight.description}
                       </p>
                       
                       {isHero && (
                         <div className="mb-8 grid grid-cols-2 gap-4">
-                          <div className="p-4 border border-brand-gray/10 bg-brand-darker/80 shadow-inner group-hover:border-brand-gray/30 transition-colors">
-                            <div className="text-[10px] font-sans font-bold uppercase text-brand-gray tracking-widest mb-2 flex items-center gap-2">
-                               <TrendingUp size={14} className="text-brand-gray" />
+                          <div className="p-4 border border-hud-border/10 bg-hud-base/80 shadow-inner group-hover:border-hud-border/30 transition-colors">
+                            <div className="text-[10px] font-sans font-bold uppercase text-text-muted tracking-widest mb-2 flex items-center gap-2">
+                               <TrendingUp size={14} className="text-text-muted" />
                                Impacto Estimado
                             </div>
-                            <div className="font-heading text-xl text-brand-light">{benefit}</div>
+                            <div className="font-display text-xl text-text-main">{benefit}</div>
                           </div>
-                          <div className="p-4 border border-brand-gray/10 bg-brand-darker/80 shadow-inner group-hover:border-brand-gray/30 transition-colors">
-                            <div className="text-[10px] font-sans font-bold uppercase text-brand-gray tracking-widest mb-2 flex items-center gap-2">
-                               <Activity size={14} className="text-brand-gray" />
+                          <div className="p-4 border border-hud-border/10 bg-hud-base/80 shadow-inner group-hover:border-hud-border/30 transition-colors">
+                            <div className="text-[10px] font-sans font-bold uppercase text-text-muted tracking-widest mb-2 flex items-center gap-2">
+                               <Activity size={14} className="text-text-muted" />
                                Esforço / Tempo
                             </div>
-                            <div className="font-heading text-xl text-brand-light">{time}</div>
+                            <div className="font-display text-xl text-text-main">{time}</div>
                           </div>
                         </div>
                       )}
                       
                       <div className="space-y-4 mb-6">
-                         <div className="flex items-center gap-2 border-b border-brand-gray/10 pb-2">
-                            <Target size={14} className="text-brand-gray" />
-                            <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-brand-gray">Diretrizes de Execução</span>
+                         <div className="flex items-center gap-2 border-b border-hud-border/10 pb-2">
+                            <Target size={14} className="text-text-muted" />
+                            <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-text-muted">Diretrizes de Execução</span>
                          </div>
                          {checklist.map((item, i) => (
                            <div key={i} className="flex items-start gap-3">
                              <div className={`mt-1 w-1.5 h-1.5 rounded-none rotate-45 ${prioBg}`} />
-                             <span className="text-sm font-sans text-brand-light/90 font-medium">{item}</span>
+                             <span className="text-sm font-sans text-text-main/90 font-medium">{item}</span>
                            </div>
                          ))}
                       </div>
@@ -453,22 +473,22 @@ export default function Insights({ analysis, stats }: InsightsProps) {
                   </div>
                   
                   {/* FOOTER */}
-                  <div className="p-4 bg-brand-darker border-t border-brand-gray/10 flex items-center justify-between mt-auto">
+                  <div className="p-4 bg-hud-base border-t border-hud-border/10 flex items-center justify-between mt-auto">
                      <div className="flex gap-6">
                         <div className="flex items-center gap-2">
-                           <ShieldAlert size={14} className="text-brand-gray" />
-                           <span className="text-[10px] font-bold uppercase tracking-widest text-brand-gray">{difficulty}</span>
+                           <ShieldAlert size={14} className="text-text-muted" />
+                           <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">{difficulty}</span>
                         </div>
                         {!isHero && (
                           <div className="flex items-center gap-2">
-                             <Target size={14} className="text-brand-gray" />
-                             <span className="text-[10px] font-bold uppercase tracking-widest text-brand-gray">{time}</span>
+                             <Target size={14} className="text-text-muted" />
+                             <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">{time}</span>
                           </div>
                         )}
                      </div>
                      <button 
                         onClick={() => setSelectedInsight({ ...insight, severity, time, difficulty, benefit, checklist, prioColor, prioBg, prioBorder })}
-                        className={`px-6 py-2 text-xs font-heading uppercase tracking-widest transition-all duration-300 ${isHero ? 'bg-brand-light text-brand-dark hover:bg-white hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]' : 'border border-brand-gray/30 text-brand-light hover:bg-brand-gray/10 hover:border-brand-gray/50'}`}
+                        className={`px-6 py-2 text-xs font-display uppercase tracking-widest transition-all duration-300 ${isHero ? 'bg-text-main text-hud-surface hover:bg-white hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]' : 'border border-hud-border/30 text-text-main hover:bg-hud-border/10 hover:border-hud-border/50'}`}
                      >
                         Ver Detalhes
                      </button>
@@ -488,7 +508,7 @@ export default function Insights({ analysis, stats }: InsightsProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-brand-darker/90 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-hud-base/90 backdrop-blur-sm"
             onClick={() => setSelectedInsight(null)}
           >
             <motion.div
@@ -496,62 +516,62 @@ export default function Insights({ analysis, stats }: InsightsProps) {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className={`w-full max-w-2xl bg-brand-dark border ${selectedInsight.prioBorder} shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}
+              className={`w-full max-w-2xl bg-hud-surface border ${selectedInsight.prioBorder} shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}
             >
               {/* MODAL HEADER */}
               <div className={`p-6 border-b ${selectedInsight.prioBorder} ${selectedInsight.prioBg} relative overflow-hidden flex justify-between items-start`}>
                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-[40px] rounded-full" />
                  <div className="relative z-10 flex items-center gap-4">
-                    <div className={`p-4 bg-brand-dark/50 border ${selectedInsight.prioBorder} rounded-sm`}>
+                    <div className={`p-4 bg-hud-surface/50 border ${selectedInsight.prioBorder} rounded-sm`}>
                       {React.createElement(categoryIcons[selectedInsight.category] || Zap, { size: 32, className: selectedInsight.prioColor })}
                     </div>
                     <div>
                       <div className={`font-sans font-bold uppercase text-xs tracking-[0.2em] ${selectedInsight.prioColor} mb-1`}>
                         {selectedInsight.category}
                       </div>
-                      <h4 className="font-heading uppercase tracking-wider text-white text-2xl">
+                      <h4 className="font-display uppercase tracking-wider text-white text-2xl">
                         {selectedInsight.title}
                       </h4>
                     </div>
                  </div>
-                 <button onClick={() => setSelectedInsight(null)} className="text-brand-gray hover:text-white transition-colors relative z-10 p-2">
+                 <button onClick={() => setSelectedInsight(null)} className="text-text-muted hover:text-white transition-colors relative z-10 p-2">
                    <X size={24} />
                  </button>
               </div>
 
               {/* MODAL CONTENT */}
               <div className="p-8 overflow-y-auto custom-scrollbar">
-                 <p className="font-sans text-brand-light/90 text-lg leading-relaxed mb-8">
+                 <p className="font-sans text-text-main/90 text-lg leading-relaxed mb-8">
                    {selectedInsight.description}
                  </p>
 
                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <div className="p-4 border border-brand-gray/20 bg-brand-darker/50">
-                      <div className="text-[10px] font-sans font-bold uppercase text-brand-gray mb-2">Impacto</div>
-                      <div className="font-heading text-lg text-brand-light">{selectedInsight.benefit}</div>
+                    <div className="p-4 border border-hud-border/20 bg-hud-base/50">
+                      <div className="text-[10px] font-sans font-bold uppercase text-text-muted mb-2">Impacto</div>
+                      <div className="font-display text-lg text-text-main">{selectedInsight.benefit}</div>
                     </div>
-                    <div className="p-4 border border-brand-gray/20 bg-brand-darker/50">
-                      <div className="text-[10px] font-sans font-bold uppercase text-brand-gray mb-2">Tempo</div>
-                      <div className="font-heading text-lg text-brand-light">{selectedInsight.time}</div>
+                    <div className="p-4 border border-hud-border/20 bg-hud-base/50">
+                      <div className="text-[10px] font-sans font-bold uppercase text-text-muted mb-2">Tempo</div>
+                      <div className="font-display text-lg text-text-main">{selectedInsight.time}</div>
                     </div>
-                    <div className="p-4 border border-brand-gray/20 bg-brand-darker/50">
-                      <div className="text-[10px] font-sans font-bold uppercase text-brand-gray mb-2">Severidade</div>
-                      <div className="font-heading text-lg text-brand-light">{selectedInsight.severity}/100</div>
+                    <div className="p-4 border border-hud-border/20 bg-hud-base/50">
+                      <div className="text-[10px] font-sans font-bold uppercase text-text-muted mb-2">Severidade</div>
+                      <div className="font-display text-lg text-text-main">{selectedInsight.severity}/100</div>
                     </div>
-                    <div className="p-4 border border-brand-gray/20 bg-brand-darker/50">
-                      <div className="text-[10px] font-sans font-bold uppercase text-brand-gray mb-2">Dificuldade</div>
-                      <div className="font-heading text-lg text-brand-light">{selectedInsight.difficulty}</div>
+                    <div className="p-4 border border-hud-border/20 bg-hud-base/50">
+                      <div className="text-[10px] font-sans font-bold uppercase text-text-muted mb-2">Dificuldade</div>
+                      <div className="font-display text-lg text-text-main">{selectedInsight.difficulty}</div>
                     </div>
                  </div>
 
                  <div className="space-y-4">
-                    <h5 className="text-sm font-sans font-bold uppercase tracking-widest text-brand-gray border-b border-brand-gray/20 pb-2">Plano de Treino Detalhado</h5>
-                    <div className="bg-brand-darker/50 border border-brand-gray/10 p-6">
+                    <h5 className="text-sm font-sans font-bold uppercase tracking-widest text-text-muted border-b border-hud-border/20 pb-2">Plano de Treino Detalhado</h5>
+                    <div className="bg-hud-base/50 border border-hud-border/10 p-6">
                        <ul className="space-y-4">
                          {selectedInsight.checklist.map((item, i) => (
                            <li key={i} className="flex items-start gap-3">
                              <CheckCircle2 size={20} className={`mt-0.5 shrink-0 ${selectedInsight.prioColor}`} />
-                             <span className="text-sm font-sans text-brand-light leading-relaxed">{item}</span>
+                             <span className="text-sm font-sans text-text-main leading-relaxed">{item}</span>
                            </li>
                          ))}
                        </ul>

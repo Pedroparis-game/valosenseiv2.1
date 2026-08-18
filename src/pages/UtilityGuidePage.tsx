@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import UtilityMapPanel from '../components/dashboard/UtilityMapPanel';
 import LineupCard from '../components/dashboard/LineupCard';
 import Modal from '../components/ui/Modal';
+import { Button } from '../components/ui/Button';
 import { Search, Filter } from 'lucide-react';
 
 const mockLineups = [
@@ -34,24 +35,28 @@ export default function UtilityGuidePage() {
               className="valo-input !pl-10 !py-2 !text-sm"
             />
           </div>
-          <button className="p-2 border border-hud-border text-text-muted hover:text-accent-primary hover:border-accent-primary transition-colors clip-chamfer-sm bg-hud-base">
-            <Filter size={18} />
-          </button>
+          <Button 
+            variant="secondary"
+            className="!p-2"
+            icon={<Filter size={18} />}
+          />
         </div>
 
         <div className="flex bg-hud-base border border-hud-border clip-chamfer-sm p-1 w-full md:w-auto">
-          <button 
+          <Button 
             onClick={() => setView('cards')}
-            className={`flex-1 md:w-24 py-1.5 text-xs font-mono font-bold uppercase tracking-widest clip-chamfer-sm transition-colors ${view === 'cards' ? 'bg-hud-surface text-accent-primary' : 'text-text-muted hover:text-text-main'}`}
+            variant={view === 'cards' ? 'tab-active' : 'ghost'}
+            className="flex-1 md:w-24 !py-1.5 !text-xs !font-mono !border-none shadow-none"
           >
             Grid
-          </button>
-          <button 
+          </Button>
+          <Button 
             onClick={() => setView('map')}
-            className={`flex-1 md:w-24 py-1.5 text-xs font-mono font-bold uppercase tracking-widest clip-chamfer-sm transition-colors ${view === 'map' ? 'bg-hud-surface text-accent-primary' : 'text-text-muted hover:text-text-main'}`}
+            variant={view === 'map' ? 'tab-active' : 'ghost'}
+            className="flex-1 md:w-24 !py-1.5 !text-xs !font-mono !border-none shadow-none"
           >
             Mapa
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -100,9 +105,9 @@ export default function UtilityGuidePage() {
             Alinhe sua mira com a quina da caixa principal. Avance um passo e atire com o botão esquerdo para cobrir a visão da rampa no site B.
           </p>
           <div className="flex justify-end pt-4 border-t border-hud-border">
-            <button className="tactical-btn !text-sm !py-2" onClick={() => setSelectedLineup(null)}>
+            <Button size="sm" onClick={() => setSelectedLineup(null)}>
               Fechar
-            </button>
+            </Button>
           </div>
         </div>
       </Modal>

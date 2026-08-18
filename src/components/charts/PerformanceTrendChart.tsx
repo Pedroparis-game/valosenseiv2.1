@@ -86,7 +86,10 @@ export default function PerformanceTrendChart({ matches }: Props) {
             <CartesianGrid strokeDasharray="3 3" stroke="#2A323C" vertical={false} />
             <XAxis 
               dataKey="playedAt" 
-              tickFormatter={(val) => new Date(val).toLocaleDateString('pt-BR', { month: 'short', day: 'numeric' })}
+              tickFormatter={(val) => {
+                const d = new Date(val);
+                return `${d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} ${d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute:'2-digit' })}`;
+              }}
               stroke="#8B97A3"
               fontSize={10}
               tickLine={false}
@@ -119,23 +122,26 @@ export default function PerformanceTrendChart({ matches }: Props) {
               dataKey="kda" 
               name="KDA Ratio" 
               stroke="#FF4655" 
-              strokeWidth={2}
-              dot={{ fill: '#FF4655', strokeWidth: 0, r: 3 }}
-              activeDot={{ r: 6, stroke: '#FF4655', strokeWidth: 2, fill: '#0B1015' }}
+              strokeWidth={3}
+              dot={{ fill: '#FF4655', strokeWidth: 0, r: 4 }}
+              activeDot={{ r: 8, stroke: '#FF4655', strokeWidth: 2, fill: '#0F1113' }}
               isAnimationActive={true}
-              animationDuration={800}
+              animationDuration={1200}
+              animationEasing="ease-out"
+              style={{ filter: 'drop-shadow(0 0 10px rgba(255,70,85,0.4))' }}
             />
             <Line 
               yAxisId="right"
               type="monotone" 
               dataKey="winrate" 
               name="Winrate %" 
-              stroke="#8B97A3" 
+              stroke="#00E5FF" 
               strokeWidth={2}
               strokeDasharray="4 4"
               dot={false}
               isAnimationActive={true}
-              animationDuration={800}
+              animationDuration={1200}
+              animationEasing="ease-out"
             />
           </LineChart>
         </ResponsiveContainer>

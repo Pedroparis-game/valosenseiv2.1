@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import RankBadge from './RankBadge';
-import CountUp from '../ui/CountUp';
+import { RankBadge } from '../ui/RankBadge';
+import { AnimatedCounter } from '../ui/animations/AnimatedCounter';
 
 interface Props {
   playerName: string;
@@ -32,7 +32,7 @@ export default function HeroSummary({
       className="flex flex-col md:flex-row items-center md:items-end justify-between gap-8 pb-8 border-b border-hud-border relative"
     >
       <div className="flex flex-col md:flex-row items-center md:items-center gap-6 z-10 text-center md:text-left w-full md:w-auto">
-        <RankBadge rank={rankName} imageUrl={rankImageUrl} />
+        <RankBadge rank={rankName} rankImageUrl={rankImageUrl} />
         
         <div>
           <div className="flex items-center justify-center md:justify-start gap-2 mb-1">
@@ -55,7 +55,7 @@ export default function HeroSummary({
           {highlightStatLabel}
         </span>
         <div className="text-4xl md:text-5xl font-display tracking-widest text-accent-primary">
-          <CountUp value={highlightStatValue} decimals={1} suffix={highlightStatSuffix} />
+          <AnimatedCounter value={highlightStatValue} decimals={1} suffix={highlightStatSuffix} />
         </div>
       </div>
     </motion.div>

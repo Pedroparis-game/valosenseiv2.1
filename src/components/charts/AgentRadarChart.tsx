@@ -52,35 +52,39 @@ export default function AgentRadarChart({ data, primaryAgentName, secondaryAgent
 
       <div className="flex-grow w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart cx="50%" cy="50%" outerRadius="70%" data={data}>
+          <RadarChart cx="50%" cy="50%" outerRadius="60%" data={data}>
             <PolarGrid stroke="#2A323C" />
             <PolarAngleAxis 
               dataKey="attribute" 
-              tick={{ fill: '#8B97A3', fontSize: 10, fontFamily: 'JetBrains Mono', textTransform: 'uppercase' }} 
+              tick={{ fill: '#8B97A3', fontSize: 10, fontFamily: 'JetBrains Mono',  }} 
             />
             <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
             <Tooltip content={<CustomTooltip />} />
-            <Legend wrapperStyle={{ fontSize: '10px', fontFamily: 'JetBrains Mono', textTransform: 'uppercase' }} />
+            <Legend wrapperStyle={{ fontSize: '10px', fontFamily: 'JetBrains Mono',  }} />
             
             <Radar
               name={primaryAgentName}
               dataKey="value"
               stroke="#FF4655"
               fill="#FF4655"
-              fillOpacity={0.3}
+              fillOpacity={0.4}
+              strokeWidth={3}
               isAnimationActive={true}
-              animationDuration={800}
+              animationDuration={1200}
+              animationEasing="ease-out"
             />
 
             {secondaryAgentName && (
               <Radar
                 name={secondaryAgentName}
                 dataKey="secondaryValue"
-                stroke="#8B97A3"
-                fill="#8B97A3"
+                stroke="#00E5FF"
+                fill="#00E5FF"
                 fillOpacity={0.3}
+                strokeWidth={2}
                 isAnimationActive={true}
-                animationDuration={800}
+                animationDuration={1200}
+                animationEasing="ease-out"
               />
             )}
           </RadarChart>

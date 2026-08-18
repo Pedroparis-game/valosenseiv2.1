@@ -1,6 +1,5 @@
 import React from 'react';
 import { ShieldAlert, Map as MapIcon, Target, BookOpen, CheckCircle } from 'lucide-react';
-import { motion } from 'motion/react';
 
 interface Props {
   id: string;

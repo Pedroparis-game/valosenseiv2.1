@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer, Dot } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer } from 'recharts';
 import { MatchRecord } from '../../types';
 
 interface Props {
@@ -11,7 +11,7 @@ const CustomDot = (props: any) => {
   
   if (payload.result === 'win') {
     return (
-      <svg x={cx - 4} y={cy - 4} width={8} height={8} fill="#8B97A3" viewBox="0 0 10 10">
+      <svg x={cx - 5} y={cy - 5} width={10} height={10} fill="#39FF88" viewBox="0 0 10 10" style={{ filter: 'drop-shadow(0 0 5px rgba(57,255,136,0.6))' }}>
         <polygon points="5,0 10,10 0,10" />
       </svg>
     );
@@ -19,13 +19,13 @@ const CustomDot = (props: any) => {
   
   if (payload.result === 'loss') {
     return (
-      <svg x={cx - 4} y={cy - 4} width={8} height={8} fill="#8B97A3" viewBox="0 0 10 10">
+      <svg x={cx - 5} y={cy - 5} width={10} height={10} fill="#FF4655" viewBox="0 0 10 10">
         <polygon points="0,0 10,0 5,10" />
       </svg>
     );
   }
 
-  return <circle cx={cx} cy={cy} r={3} fill="#8B97A3" />;
+  return <circle cx={cx} cy={cy} r={3} fill="#00E5FF" />;
 };
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -90,14 +90,17 @@ export default function RankProgressionChart({ matches }: Props) {
           <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="colorRank" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#FF4655" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#FF4655" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#00E5FF" stopOpacity={0.4}/>
+                <stop offset="95%" stopColor="#00E5FF" stopOpacity={0}/>
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#2A323C" vertical={false} />
             <XAxis 
               dataKey="playedAt" 
-              tickFormatter={(val) => new Date(val).toLocaleDateString('pt-BR', { month: 'short', day: 'numeric' })}
+              tickFormatter={(val) => {
+                const d = new Date(val);
+                return `${d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} ${d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute:'2-digit' })}`;
+              }}
               stroke="#8B97A3"
               fontSize={10}
               tickLine={false}
@@ -123,13 +126,16 @@ export default function RankProgressionChart({ matches }: Props) {
             <Area 
               type="monotone" 
               dataKey="rankAfter" 
-              stroke="#FF4655" 
+              stroke="#00E5FF" 
+              strokeWidth={3}
               fillOpacity={1} 
               fill="url(#colorRank)" 
-              activeDot={{ r: 6, stroke: '#FF4655', strokeWidth: 2, fill: '#0B1015' }}
+              activeDot={{ r: 8, stroke: '#00E5FF', strokeWidth: 2, fill: '#0F1113' }}
               dot={<CustomDot />}
               isAnimationActive={true}
-              animationDuration={800}
+              animationDuration={1200}
+              animationEasing="ease-out"
+              style={{ filter: 'drop-shadow(0 0 10px rgba(0,229,255,0.4))' }}
             />
           </AreaChart>
         </ResponsiveContainer>

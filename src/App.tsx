@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from "motion/react";
 import { Loader2, Target } from "lucide-react";
 import { AnalysisResult, PlayerStats } from "./types";
 import { apiService, analysisService } from "./services/api";
-import { ThemeBackground } from "./components/ThemeBackground";
 import { LandingPage } from "./components/LandingPage";
 import { DashboardView } from "./components/DashboardView";
 
@@ -66,9 +65,9 @@ export default function App() {
   }, [riotId]);
 
   return (
-    <div className="min-h-screen relative overflow-x-hidden pt-10 pb-20 selection:bg-brand-red selection:text-white">
-      <ThemeBackground />
-      {!stats && <div className="fixed inset-0 valo-glitch opacity-5 pointer-events-none" data-text="VALOSENSEI" />}
+    <div className="min-h-screen relative overflow-x-hidden pt-10 pb-20 selection:bg-accent-primary selection:text-white">
+      <div className="bg-glow-blob" />
+      <div className="bg-glow-blob-2" />
       
       <AnimatePresence mode="wait">
         {loading && (
@@ -77,12 +76,12 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-xl bg-brand-darker/90"
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-xl bg-hud-base/90"
           >
             <motion.div 
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-              className="absolute w-[400px] h-[400px] border border-brand-red/20 rounded-full"
+              className="absolute w-[400px] h-[400px] border border-accent-primary/20 rounded-full"
             />
             <div className="relative">
               <motion.div 
@@ -92,10 +91,10 @@ export default function App() {
                 }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
               >
-                <Target size={120} className="text-brand-red drop-shadow-[0_0_20px_rgba(255,70,85,0.4)]" />
+                <Target size={120} className="text-accent-primary drop-shadow-[0_0_20px_rgba(255,70,85,0.4)]" />
               </motion.div>
             </div>
-            <h3 className="mt-12 text-3xl font-heading tracking-widest text-brand-light">
+            <h3 className="mt-12 text-3xl font-display tracking-widest text-text-main">
               Sincronizando Protocolos...
             </h3>
           </motion.div>
@@ -127,9 +126,9 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      <footer className="mt-32 py-10 border-t border-brand-gray/20 text-center">
-        <p className="text-xs font-sans tracking-[0.3em] opacity-40 uppercase text-brand-light">
-          Designed for Radiance <span className="text-brand-red mx-2">●</span> Defy the Limits
+      <footer className="mt-32 py-10 border-t border-hud-border/20 text-center">
+        <p className="text-xs font-sans tracking-[0.3em] opacity-40 uppercase text-text-main">
+          Designed for Radiance <span className="text-accent-primary mx-2">●</span> Defy the Limits
         </p>
       </footer>
 

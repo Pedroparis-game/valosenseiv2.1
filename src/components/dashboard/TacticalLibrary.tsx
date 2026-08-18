@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Search, Crosshair, Map, ShieldAlert, Target, Info, BookOpen, ChevronRight, Award } from "lucide-react";
+import { Button } from "../ui/Button";
 
 export interface LibraryItem {
   id: string;
@@ -48,7 +49,7 @@ const categoryIcons: Record<string, any> = {
 
 const getDifficultyStyles = (difficulty: string) => {
   switch (difficulty) {
-    case 'Básico': return 'text-accent-cyan border-accent-cyan/30 bg-accent-cyan/10';
+    case 'Básico': return 'text-accent-primary border-accent-primary/30 bg-accent-primary/10';
     case 'Intermediário': return 'text-amber-400 border-amber-400/30 bg-amber-400/10';
     case 'Avançado': return 'text-accent-crimson border-accent-crimson/30 bg-accent-crimson/10';
     default: return 'text-text-muted border-hud-border bg-hud-base';
@@ -98,18 +99,16 @@ export default function TacticalLibrary() {
             const Icon = cat.icon;
             const isActive = selectedCategory === cat.id;
             return (
-              <button
+              <Button
                 key={cat.id || 'all'}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`flex items-center gap-2 px-4 py-3 text-[10px] font-mono font-bold uppercase tracking-widest transition-all clip-chamfer-sm border ${
-                  isActive 
-                    ? "bg-accent-cyan text-hud-base border-accent-cyan" 
-                    : "bg-hud-surface text-text-muted hover:text-text-main border-hud-border hover:border-text-muted"
-                }`}
+                variant={isActive ? 'primary' : 'secondary'}
+                size="sm"
+                className="!text-[10px] !py-3 whitespace-nowrap"
+                icon={Icon ? <Icon size={14} /> : undefined}
               >
-                {Icon && <Icon size={14} />}
                 {cat.label}
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -137,12 +136,12 @@ export default function TacticalLibrary() {
                   whileHover={{ x: 4 }}
                   className={`p-4 border transition-all cursor-pointer flex items-center justify-between clip-chamfer-sm ${
                     isSelected 
-                      ? "bg-hud-surface-hover border-accent-cyan shadow-[0_0_15px_rgba(0,223,216,0.15)]" 
+                      ? "bg-hud-surface-hover border-accent-primary shadow-[0_0_15px_rgba(0,223,216,0.15)]" 
                       : "bg-hud-surface border-hud-border hover:border-hud-border/80"
                   }`}
                 >
                   <div className="flex items-center gap-4">
-                    <div className={`p-2.5 rounded-sm ${isSelected ? 'bg-accent-cyan/10 text-accent-cyan' : 'bg-hud-base text-text-muted'}`}>
+                    <div className={`p-2.5 rounded-sm ${isSelected ? 'bg-accent-primary/10 text-accent-primary' : 'bg-hud-base text-text-muted'}`}>
                       <Icon size={18} />
                     </div>
                     <div>
@@ -150,7 +149,7 @@ export default function TacticalLibrary() {
                       <p className="text-[10px] font-mono font-bold text-text-muted uppercase tracking-widest">{item.alias}</p>
                     </div>
                   </div>
-                  <ChevronRight size={16} className={`transition-transform ${isSelected ? 'text-accent-cyan translate-x-1' : 'text-text-muted/30'}`} />
+                  <ChevronRight size={16} className={`transition-transform ${isSelected ? 'text-accent-primary translate-x-1' : 'text-text-muted/30'}`} />
                 </motion.div>
               );
             })
@@ -169,14 +168,14 @@ export default function TacticalLibrary() {
                 className="tactical-card flex flex-col"
               >
                 {/* Accent line */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent-cyan to-transparent opacity-80" />
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent-primary to-transparent opacity-80" />
                 
                 {/* Header detail */}
                 <div className="p-8 border-b border-hud-border bg-hud-base relative overflow-hidden">
                   <div className="hud-grid-bg absolute inset-0 opacity-20 pointer-events-none" />
                   
                   <div className="flex flex-wrap justify-between items-start gap-4 mb-4 relative z-10">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-accent-cyan bg-accent-cyan/10 border border-accent-cyan/20 px-3 py-1">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-accent-primary bg-accent-primary/10 border border-accent-primary/20 px-3 py-1">
                       {selectedItem.categoryLabel}
                     </span>
                     <span className={`text-[10px] font-mono font-bold uppercase tracking-[0.1em] border px-3 py-1 ${getDifficultyStyles(selectedItem.difficulty)}`}>
@@ -187,7 +186,7 @@ export default function TacticalLibrary() {
                     {selectedItem.title}
                   </h3>
                   <div className="text-sm font-mono font-bold uppercase tracking-widest text-text-muted mt-2 relative z-10 flex items-center gap-2">
-                    <Info size={14} className="text-accent-cyan/70" />
+                    <Info size={14} className="text-accent-primary/70" />
                     {selectedItem.alias}
                   </div>
                 </div>
@@ -206,9 +205,9 @@ export default function TacticalLibrary() {
                   </div>
                   
                   {/* How to Apply */}
-                  <div className="p-5 bg-hud-base border-l-2 border-accent-cyan/50 space-y-3">
+                  <div className="p-5 bg-hud-base border-l-2 border-accent-primary/50 space-y-3">
                     <h5 className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-main flex items-center gap-2">
-                      <Target size={14} className="text-accent-cyan" />
+                      <Target size={14} className="text-accent-primary" />
                       Como Aplicar em Jogo
                     </h5>
                     <p className="text-xs font-body text-text-main/70 leading-relaxed">
@@ -232,15 +231,28 @@ export default function TacticalLibrary() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="tactical-card p-16 text-center flex flex-col items-center justify-center min-h-[450px]"
+                className="tactical-card relative flex flex-col items-center justify-center p-16 text-center min-h-[450px] overflow-hidden group"
               >
-                <div className="w-16 h-16 bg-hud-base border border-hud-border flex items-center justify-center clip-chamfer-sm text-text-muted mb-6 shadow-inner">
-                  <BookOpen size={28} />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,70,85,0.05)_0%,rgba(0,0,0,0)_70%)]" />
+                <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-transparent via-accent-primary/50 to-transparent shadow-[0_0_15px_rgba(255,70,85,0.8)] animate-pulse" />
+                
+                <div className="relative w-20 h-20 bg-hud-base border border-hud-border flex items-center justify-center rounded-full text-accent-primary mb-6 shadow-[0_0_20px_rgba(255,70,85,0.2)] group-hover:scale-105 transition-transform duration-500">
+                  <BookOpen size={32} strokeWidth={1.5} />
                 </div>
-                <h4 className="font-display text-2xl uppercase tracking-widest text-text-main">Aguardando Seleção</h4>
-                <p className="text-xs font-body text-text-muted max-w-sm mt-3 leading-relaxed">
-                  Acesse o painel lateral para carregar a telemetria do fundamento tático desejado.
+                
+                <h4 className="font-display text-3xl uppercase tracking-widest text-text-main relative z-10 mb-2">
+                  Biblioteca Tática
+                </h4>
+                
+                <p className="text-sm font-body text-text-muted max-w-sm mt-2 leading-relaxed relative z-10">
+                  Agente, selecione um conceito, fundamento ou estratégia no painel à esquerda para carregar o manual de operações e elevar seu nível de jogo.
                 </p>
+                
+                <div className="mt-8 flex items-center gap-2 text-text-muted text-[10px] font-mono uppercase tracking-[0.2em] relative z-10 opacity-70">
+                  <span className="w-8 h-[1px] bg-hud-border" />
+                  Sistema Aguardando Input
+                  <span className="w-8 h-[1px] bg-hud-border" />
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

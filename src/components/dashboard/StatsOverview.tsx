@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { getOfficialRankIcon } from "../../utils/rankUtils";
 import { motion } from "motion/react";
 import { PlayerStats } from "../../types";
-import { Trophy, Target, TrendingUp, Crosshair, Activity, Hash } from "lucide-react";
+import { Trophy, TrendingUp, Crosshair, Activity } from "lucide-react";
+import { StatCard } from "../ui/StatCard";
 
 interface Props {
   stats: PlayerStats;
@@ -92,21 +93,24 @@ export default function StatsOverview({ stats }: Props) {
         className="lg:col-span-7"
       >
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 h-full">
-          <StatBox 
+          <StatCard 
             label="Win Rate" 
-            value={`${stats.overallWinRate}%`} 
+            value={stats.overallWinRate}
+            suffix="%"
             icon={<TrendingUp size={16} />}
             trend={stats.overallWinRate >= 50 ? 'up' : 'down'}
           />
-          <StatBox 
+          <StatCard 
             label="Headshot" 
-            value={`${stats.overallHs}%`} 
+            value={stats.overallHs}
+            suffix="%"
             icon={<Crosshair size={16} />}
             trend={stats.overallHs >= 25 ? 'up' : 'neutral'}
           />
-          <StatBox 
+          <StatCard 
             label="K/D Ratio" 
-            value={(stats.overallKd ?? 0).toFixed(2)} 
+            value={stats.overallKd ?? 0}
+            decimals={2}
             icon={<Activity size={16} />}
             trend={(stats.overallKd ?? 0) >= 1.1 ? 'up' : 'down'}
             className="col-span-2 md:col-span-1"
@@ -116,31 +120,3 @@ export default function StatsOverview({ stats }: Props) {
     </div>
   );
 }
-
-const StatBox = ({ label, value, icon, trend, className = "" }: { label: string; value: string; icon: React.ReactNode; trend: 'up' | 'down' | 'neutral'; className?: string }) => {
-  const trendColor = 
-    trend === 'up' ? 'text-accent-cyan' : 
-    trend === 'down' ? 'text-accent-crimson' : 
-    'text-text-muted';
-
-  return (
-    <div className={`tactical-card p-4 flex flex-col justify-between group h-full ${className}`}>
-      <div className="flex justify-between items-start mb-4">
-        <div className="text-text-muted group-hover:text-text-main transition-colors">
-          {icon}
-        </div>
-        <Hash size={12} className="text-hud-border" />
-      </div>
-      
-      <div>
-        <div className="text-[10px] font-mono font-bold uppercase text-text-muted mb-1 tracking-[0.1em]">{label}</div>
-        <div className="flex items-baseline gap-2">
-          <div className="text-3xl font-display tracking-widest text-text-main">{value}</div>
-          <div className={`text-xs font-mono font-bold ${trendColor}`}>
-            {trend === 'up' ? '↑' : trend === 'down' ? '↓' : '—'}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};

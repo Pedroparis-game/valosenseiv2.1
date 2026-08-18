@@ -75,10 +75,10 @@ export default function AgentImage({ agentName }: Props) {
   }, [agentName, iconUrl]);
 
   if (!iconUrl) {
-    return <div className="w-10 h-10 bg-brand-dark rounded-full border border-brand-red flex items-center justify-center shrink-0"><User size={20} className="text-brand-gray" /></div>;
+    return <div className="w-10 h-10 bg-hud-surface rounded-full border border-accent-primary flex items-center justify-center shrink-0"><User size={20} className="text-text-muted" /></div>;
   }
 
   return (
-    <img src={iconUrl} referrerPolicy="no-referrer" alt={agentName} className="w-10 h-10 rounded-full border border-brand-red shrink-0 object-cover bg-brand-dark/50" />
+    <img src={iconUrl} referrerPolicy="no-referrer" alt={agentName} className="w-10 h-10 rounded-full border border-accent-primary shrink-0 object-cover bg-hud-surface/50" />
   );
 }

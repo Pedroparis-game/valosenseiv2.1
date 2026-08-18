@@ -1,4 +1,4 @@
-import { PlayerStats, AnalysisResult, TrainingInsight } from "../types";
+import { PlayerStats, AnalysisResult } from "../types";
 
 export const apiService = {
   async getPlayerStats(name: string, tag: string): Promise<PlayerStats> {

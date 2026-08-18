@@ -30,7 +30,7 @@ export const MapPerformanceGrid: React.FC<MapPerformanceGridProps> = ({ maps, on
         <h2 className="text-2xl font-heading uppercase text-white tracking-widest">
           Desempenho por Mapa
         </h2>
-        <div className="h-px flex-grow bg-gradient-to-r from-brand-red/30 to-transparent" />
+        <div className="h-px flex-grow bg-gradient-to-r from-accent-primary/30 to-transparent" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -27,10 +27,10 @@ export default function PerformanceRadar({ analysis }: Props) {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-brand-dark/95 border border-brand-red/50 p-4 shadow-[0_0_15px_rgba(255,70,85,0.2)] backdrop-blur-md">
-          <p className="font-heading text-xl uppercase tracking-widest text-brand-light mb-1">{data.subject}</p>
-          <p className="text-3xl font-heading text-brand-red mb-2">{data.value}<span className="text-sm text-brand-gray">/100</span></p>
-          <p className="text-xs font-sans text-brand-light/70 max-w-[200px] leading-relaxed">{data.desc}</p>
+        <div className="bg-hud-surface/95 border border-accent-primary/50 p-4 shadow-[0_0_15px_rgba(255,70,85,0.2)] backdrop-blur-md">
+          <p className="font-heading text-xl uppercase tracking-widest text-text-main mb-1">{data.subject}</p>
+          <p className="text-3xl font-heading text-accent-primary mb-2">{data.value}<span className="text-sm text-text-muted">/100</span></p>
+          <p className="text-xs font-sans text-text-main/70 max-w-[200px] leading-relaxed">{data.desc}</p>
         </div>
       );
     }
@@ -47,32 +47,32 @@ export default function PerformanceRadar({ analysis }: Props) {
       <div className="w-full h-[380px] relative drop-shadow-[0_0_25px_rgba(255,70,85,0.15)]">
         <ResponsiveContainer width="100%" height="100%" minWidth={100} minHeight={100}>
           <RadarChart cx="50%" cy="50%" outerRadius="55%" data={data}>
-            <PolarGrid stroke="#ff465540" strokeWidth={1} />
+            <PolarGrid stroke="#00E5FF40" strokeWidth={1} />
             <PolarAngleAxis 
               dataKey="subject" 
-              tick={{ fill: '#ece8e1', fontSize: 10, fontFamily: 'Inter, sans-serif', fontWeight: 700, letterSpacing: '0.1em' }} 
+              tick={{ fill: '#1B1E22', fontSize: 10, fontFamily: 'Inter, sans-serif', fontWeight: 700, letterSpacing: '0.1em' }} 
             />
             <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
             <Tooltip content={<CustomTooltip />} />
             <Radar
               name="Player"
               dataKey="value"
-              stroke="#ff4655"
+              stroke="#00E5FF"
               strokeWidth={3}
-              fill="#ff4655"
+              fill="#00E5FF"
               fillOpacity={0.3}
               animationBegin={500}
               animationDuration={2000}
               isAnimationActive={true}
-              dot={{ r: 4, fill: "#ff4655", strokeWidth: 0 }}
-              activeDot={{ r: 6, fill: "#ece8e1", stroke: "#ff4655", strokeWidth: 2 }}
+              dot={{ r: 4, fill: "#00E5FF", strokeWidth: 0 }}
+              activeDot={{ r: 6, fill: "#1B1E22", stroke: "#00E5FF", strokeWidth: 2 }}
             />
           </RadarChart>
         </ResponsiveContainer>
       </div>
       
       <div className="mt-4 px-6 text-center">
-         <p className="text-[10px] font-sans font-bold uppercase tracking-widest text-brand-gray/60">Passe o mouse sobre os vértices para ver detalhes</p>
+         <p className="text-[10px] font-sans font-bold uppercase tracking-widest text-text-muted/60">Passe o mouse sobre os vértices para ver detalhes</p>
       </div>
     </motion.div>
   );

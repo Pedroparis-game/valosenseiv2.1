@@ -13,7 +13,7 @@ export const MapCard: React.FC<MapCardProps> = ({ mapData, onClick }) => {
   return (
     <div
       onClick={() => onClick(mapId)}
-      className="relative overflow-hidden rounded-xl cursor-pointer group border border-zinc-800 bg-zinc-950 transition-all duration-300 hover:border-brand-red hover:shadow-[0_0_15px_rgba(255,70,85,0.3)] flex flex-col min-h-[260px]"
+      className="relative overflow-hidden rounded-xl cursor-pointer group border border-zinc-800 bg-zinc-950 transition-all duration-300 hover:border-accent-primary hover:shadow-[0_0_15px_rgba(255,70,85,0.3)] flex flex-col min-h-[260px]"
     >
       {/* Splash Art Background */}
       <div className="absolute inset-0 z-0 overflow-hidden">
@@ -43,7 +43,7 @@ export const MapCard: React.FC<MapCardProps> = ({ mapData, onClick }) => {
           <div className="flex items-baseline gap-2">
             <span
               className={`text-4xl font-heading font-bold tracking-wide ${
-                isPositiveWinRate ? "text-emerald-400" : "text-brand-red"
+                isPositiveWinRate ? "text-emerald-400" : "text-accent-primary"
               }`}
             >
               {stats.winRate}%

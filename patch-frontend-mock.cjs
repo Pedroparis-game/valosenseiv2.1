@@ -1,4 +1,6 @@
-import { PlayerStats, AnalysisResult } from "../types";
+const fs = require('fs');
+
+const newCode = `import { PlayerStats, AnalysisResult } from "../types";
 
 export const apiService = {
   async getPlayerStats(name: string, tag: string): Promise<PlayerStats> {
@@ -60,7 +62,7 @@ export const analysisService = {
     const analysisData: any = {
       id: crypto.randomUUID(),
       userId: "demo-user",
-      riotId: `${playerData.name}#${playerData.tag}`,
+      riotId: \`\${playerData.name}#\${playerData.tag}\`,
       createdAt: new Date().toISOString(),
       overallScore: overall,
       tacticalBreakdown: {
@@ -115,3 +117,6 @@ export const analysisService = {
     return analysisData;
   }
 };
+`;
+
+fs.writeFileSync('src/services/api.ts', newCode);

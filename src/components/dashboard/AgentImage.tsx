@@ -3,6 +3,7 @@ import { User } from "lucide-react";
 
 interface Props {
   agentName: string;
+  className?: string;
 }
 
 // Global cache for agent data to avoid redundant API calls
@@ -38,7 +39,7 @@ const STATIC_AGENT_ICONS: Record<string, string> = {
   vyse: "https://media.valorant-api.com/agents/efba5359-4016-a1e5-7626-b1ae76895940/displayicon.png"
 };
 
-export default function AgentImage({ agentName }: Props) {
+export default function AgentImage({ agentName, className }: Props) {
   const [iconUrl, setIconUrl] = useState<string | null>(() => {
     const key = agentName.toLowerCase().replace('/', '').replace('-', '_').trim();
     return STATIC_AGENT_ICONS[key] || null;
@@ -75,10 +76,10 @@ export default function AgentImage({ agentName }: Props) {
   }, [agentName, iconUrl]);
 
   if (!iconUrl) {
-    return <div className="w-10 h-10 bg-hud-surface rounded-full border border-accent-primary flex items-center justify-center shrink-0"><User size={20} className="text-text-muted" /></div>;
+    return <div className={className || "w-10 h-10 bg-hud-surface rounded-full border border-accent-primary flex items-center justify-center shrink-0"}><User size={20} className="text-text-muted" /></div>;
   }
 
   return (
-    <img src={iconUrl} referrerPolicy="no-referrer" alt={agentName} className="w-10 h-10 rounded-full border border-accent-primary shrink-0 object-cover bg-hud-surface/50" />
+    <img src={iconUrl} referrerPolicy="no-referrer" alt={agentName} className={className || "w-10 h-10 rounded-full border border-accent-primary shrink-0 object-cover bg-hud-surface/50"} />
   );
 }

@@ -2,8 +2,8 @@ import React from 'react';
 import { motion } from 'motion/react';
 
 export default function CinematicLogo() {
-  // Vamos criar 25 camadas da mesma imagem para dar "espessura" e volume 3D real
-  const depthLayers = Array.from({ length: 25 });
+  // Reduzido para 10 camadas para evitar sobrecarga de memória no navegador
+  const depthLayers = Array.from({ length: 10 });
 
   return (
     <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center mb-8 mt-4 mx-auto" style={{ perspective: '1200px' }}>
@@ -29,19 +29,15 @@ export default function CinematicLogo() {
               alt="Avatar Samurai 3D" 
               className="absolute inset-0 w-[130%] h-[130%] max-w-none object-contain m-auto pointer-events-none"
               style={{
-                transform: `translateZ(${zOffset * 1.5}px)`,
-                // Suavização do material: reduz o contraste duro da camada frontal e adiciona um blur sutil simulando o "subsurface glow" orgânico
+                transform: `translateZ(${zOffset * 2.5}px)`, // Aumentei o espaçamento para compensar menos camadas
                 filter: i === 0 
-                  ? 'drop-shadow(0 0 25px rgba(255,40,50,0.8)) brightness(1.05) contrast(0.9) saturate(1.1) drop-shadow(0 0 2px rgba(255,255,255,0.2))' 
-                  : i === depthLayers.length - 1
-                    ? 'brightness(0.2) drop-shadow(0px 0px 30px rgba(255,20,30,0.9))'
-                    : 'brightness(0.15) contrast(1.5)', // Miolo ainda escuro mas com menos ruído
-                // Para dar um aspecto menos "low-poly facetado", reduzimos a opacidade das bordas intermediárias
-                opacity: (i > 0 && i < depthLayers.length - 1) ? 0.8 : 1,
+                  ? 'drop-shadow(0 0 15px rgba(255,26,43,0.4))' 
+                  : 'brightness(0.15)', 
+                opacity: i === 0 ? 1 : 0.85,
                 WebkitUserDrag: 'none'
               }}
               onError={(e) => {
-                (e.target as HTMLImageElement).src = "https://via.placeholder.com/400x400/0a0f16/FF4655?text=Faça+Upload+da+Imagem";
+                (e.target as HTMLImageElement).src = "/logo.png"; // Fallback interno seguro
               }}
             />
           );
@@ -76,11 +72,9 @@ export default function CinematicLogo() {
               alt="" 
               className="absolute inset-0 w-[130%] h-[130%] max-w-none object-contain m-auto"
               style={{
-                transform: `translateZ(${zOffset * 1.5}px)`,
-                filter: i === 0 
-                  ? 'brightness(1.05) contrast(0.9) saturate(1.1)' 
-                  : 'brightness(0.15) contrast(1.5)',
-                opacity: (i > 0 && i < depthLayers.length - 1) ? 0.8 : 1,
+                transform: `translateZ(${zOffset * 2.5}px)`,
+                filter: i === 0 ? 'brightness(1)' : 'brightness(0.15)',
+                opacity: i === 0 ? 1 : 0.85,
               }}
             />
           );

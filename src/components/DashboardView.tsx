@@ -118,6 +118,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             { id: 'charts', label: 'Evolução', icon: <Target size={18} /> },
             { id: 'maps', label: 'Mapas', icon: <Map size={18} /> },
             { id: 'library', label: 'Biblioteca', icon: <BookOpen size={18} /> },
+            
+            
           ]}
         />
       </motion.div>
@@ -160,7 +162,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
            <InsightsChartsSection matches={matchRecords} />
         )}
 
-        {activeTab === 'maps' && (
+        
+
+        
+                  {activeTab === 'maps' && (
            <MapPerformanceGrid 
              maps={mockMapPerformanceData} 
              onClick={(id) => setSelectedMapId(id)} 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { getOfficialRankIcon } from '../../utils/rankUtils';
+import { getStaticRankIcon, getOfficialRankIcon } from '../../utils/rankUtils';
 import { useState, useEffect } from 'react';
 
 interface RankBadgeProps {
@@ -12,7 +12,7 @@ interface RankBadgeProps {
 
 export const RankBadge: React.FC<RankBadgeProps> = ({ rank, rankImageUrl, rr, className = '' }) => {
   const [iconUrl, setIconUrl] = useState<string>(
-    rankImageUrl || "https://media.valorant-api.com/competitivetiers/03621f13-4c37-ad53-9043-695333d57551/0/largeicon.png"
+    rankImageUrl || getStaticRankIcon(rank)
   );
 
   useEffect(() => {

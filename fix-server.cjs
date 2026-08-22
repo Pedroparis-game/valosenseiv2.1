@@ -1,4 +1,8 @@
-import axios from "axios";
+const fs = require('fs');
+let code = fs.readFileSync('server.ts', 'utf8');
+
+// I will just rebuild the server.ts from what I know it should be.
+const fixedCode = `import axios from "axios";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
@@ -57,7 +61,7 @@ async function startServer() {
       const { message, history } = req.body;
       const model = "gemini-2.5-flash";
       
-      const systemInstruction = `Você é o "Sensei", um treinador de elite de Valorant focado em resultados imediatos.
+      const systemInstruction = \`Você é o "Sensei", um treinador de elite de Valorant focado em resultados imediatos.
 Sua missão é dar conselhos táticos e mecânicos de forma EXTREMAMENTE OBJETIVA e CLARA.
 Diretrizes:
 1. Respostas curtas e diretas (máximo 3-4 frases ou uma lista de pontos).
@@ -65,7 +69,7 @@ Diretrizes:
 3. Sem conversas fúteis: foque no que o jogador deve FAZER para ganhar a próxima partida.
 4. Se o jogador divagar, traga-o de volta para o foco do treinamento.
 5. Personalidade: Sério, pragmático e focado na disciplina.
-Responda sempre em Português do Brasil.`;
+Responda sempre em Português do Brasil.\`;
 
       const chat = ai.chats.create({
         model: model,
@@ -86,7 +90,7 @@ Responda sempre em Português do Brasil.`;
   app.post("/api/analyze", async (req, res) => {
     try {
       const { playerData } = req.body;
-      const prompt = `
+      const prompt = \`
         # INSTRUÇÃO DE SISTEMA (SYSTEM PROMPT) - VALOSENSEI
         ## 1. Seu Papel e Regra de Ouro
         Você é o ValoSensei, um analista de dados rigoroso e treinador de Valorant de nível Radiante e especialista em análise de desempenho.
@@ -112,10 +116,10 @@ Responda sempre em Português do Brasil.`;
         { "summary": "Os dados fornecidos estão incompletos, inacessíveis ou o perfil é privado. Verifique sua conexão com o Tracker.", "strengths": ["Sem dados"], "weaknesses": ["Sem dados"], "recommendations": ["Jogue mais partidas e verifique sua conta"], "stats": { "headshotRate": "0%", "kda": "0.0", "winRate": "0%", "impactScore": "0", "bestAgent": "-", "bestMap": "-" }, "conclusion": "Aguardando mais dados para análise." }
 
         DADOS DO JOGADOR:
-        Riot ID: ${playerData.name}#${playerData.tag}
-        Estatísticas das Partidas Recentes: ${JSON.stringify(playerData.recentMatches)}
-        Média de Headshot: ${playerData.overallHs}%
-        Média de WinRate: ${playerData.overallWinRate}%
+        Riot ID: \${playerData.name}#\${playerData.tag}
+        Estatísticas das Partidas Recentes: \${JSON.stringify(playerData.recentMatches)}
+        Média de Headshot: \${playerData.overallHs}%
+        Média de WinRate: \${playerData.overallWinRate}%
         
         REGRAS DE NEGÓCIO DO APP:
         1. Analise KDA, ADR e HS% para determinar a qualidade da mira.
@@ -165,7 +169,7 @@ Recomende os melhores agentes (recommendedAgents) e o seu melhor agente (bestAge
             "conclusion": "string (Uma frase motivadora)"
           }
         }
-      `;
+      \`;
 
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
@@ -202,8 +206,11 @@ Recomende os melhores agentes (recommendedAgents) e o seu melhor agente (bestAge
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(\`Server running on http://localhost:\${PORT}\`);
   });
 }
 
 startServer();
+`;
+
+fs.writeFileSync('server.ts', fixedCode);

@@ -41,7 +41,7 @@ export default function App() {
       setStats(playerStats);
       
       const latestMatchId = playerStats.recentMatches?.[0]?.id || 'nomatch';
-      const cacheKey = `analysis_v1.9_${name.toLowerCase()}_${tag.toLowerCase()}_${latestMatchId}`;
+      const cacheKey = `analysis_v3.0_${name.toLowerCase()}_${tag.toLowerCase()}_${latestMatchId}`;
       
       if (!isRefresh) {
         const savedAnalysis = localStorage.getItem(cacheKey);

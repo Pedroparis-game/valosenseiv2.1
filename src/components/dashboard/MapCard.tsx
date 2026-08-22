@@ -1,5 +1,6 @@
 import React from "react";
 import { MapDashboardData } from "../../types";
+import AgentImage from "./AgentImage";
 
 interface MapCardProps {
   mapData: MapDashboardData;
@@ -81,12 +82,7 @@ export const MapCard: React.FC<MapCardProps> = ({ mapData, onClick }) => {
                 className="relative w-9 h-9 rounded-full border-2 border-zinc-950 bg-zinc-800 overflow-hidden z-10 hover:z-20 transition-all duration-200 hover:scale-110"
                 title={agent.name}
               >
-                <img
-                  src={agent.iconUrl}
-                  alt={agent.name}
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
+                <AgentImage agentName={agent.name} className="w-full h-full object-cover bg-hud-surface/50" />
               </div>
             ))}
           </div>

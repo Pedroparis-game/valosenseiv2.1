@@ -24,7 +24,7 @@ import { X } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 
 import { Flame } from "lucide-react";
-import { getOfficialRankIcon } from "../../utils/rankUtils";
+import { getOfficialRankIcon, getStaticRankIcon } from "../../utils/rankUtils";
 export default function Insights({ analysis, stats }: InsightsProps) {
   const [showCelebration, setShowCelebration] = useState(false);
   const [celebrationType, setCelebrationType] = useState<'victory' | 'rank_up' | 'high_kda'>('victory');
@@ -54,7 +54,7 @@ export default function Insights({ analysis, stats }: InsightsProps) {
 
   const [selectedInsight, setSelectedInsight] = React.useState<any>(null);
   const [rankIconUrl, setRankIconUrl] = React.useState<string>(
-    stats.rankImageUrl || "https://media.valorant-api.com/competitivetiers/03621f13-4c37-ad53-9043-695333d57551/0/largeicon.png"
+    stats.rankImageUrl || getStaticRankIcon(stats.rank)
   );
 
   React.useEffect(() => {
